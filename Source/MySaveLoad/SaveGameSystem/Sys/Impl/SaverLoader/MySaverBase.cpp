@@ -16,7 +16,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMySaverBase::SetupSaverBase(IMySaveSystemInternal* InSys, FArchive* InArchive, UWorld* InWorld, UMySaveLoadState* InCommState)
+void UMySaverBase::SetupSaverBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupSaverBase..."));
 
@@ -82,9 +82,9 @@ void UMySaverBase::Extract_WorldInfo()
 void UMySaverBase::Extract_DestructedObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("Extracing info about destructed objects..."));
-	GetCommState()->DestructedObjects = GetSys()->GetDestructedObjects();
-	UE_LOG(MyLog, Log, TEXT("%d destructed objects found"), GetCommState()->DestructedObjects.Num());
-	for(const FName& DestructObjectName : GetCommState()->DestructedObjects)
+	GetCommState()->StaticDestructedObjects = GetSys()->GetStaticDestructedObjects();
+	UE_LOG(MyLog, Log, TEXT("%d destructed objects found"), GetCommState()->StaticDestructedObjects.Num());
+	for(const FName& DestructObjectName : GetCommState()->StaticDestructedObjects)
 	{
 		UE_LOG(MyLog, Log, TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
 	}
@@ -225,7 +225,7 @@ void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySa
 	}
 }
 
-void UMySaverBase::RegisterGlobalObject(UObject* InObject)
+void UMySaverBase::RegisterGlobalObject(UObject* const InObject)
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject..."));
 	check(InObject);
@@ -234,7 +234,7 @@ void UMySaverBase::RegisterGlobalObject(UObject* InObject)
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject DONE"));
 }
 
-void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* InObject)
+void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject_IfShouldBeSaved..."));
 	check(InObject);

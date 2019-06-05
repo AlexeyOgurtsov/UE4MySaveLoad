@@ -21,5 +21,5 @@ public:
 	/**
 	* Gets names of all destructed objects.
 	*/
-	virtual TArray<FName> GetDestructedObjects() const = 0;
+	virtual TArray<FName> GetStaticDestructedObjects() const = 0;
 };

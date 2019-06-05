@@ -15,12 +15,12 @@ namespace
 	FString const FORMAT_SIGNATURE { "SAV" };
 } // anonymous
 
-void UMySaveLoadSystemUtils::CheckSavedWorldValid(const FMySavedWorld* InWorld)
+void UMySaveLoadSystemUtils::CheckSavedWorldValid(const FMySavedWorld* const InWorld)
 {
 	check(IsSavedWorldValid(InWorld, /*bLogged=*/true));
 }
 
-bool UMySaveLoadSystemUtils::IsSavedWorldValid(const FMySavedWorld* InWorld, bool bInLogged)
+bool UMySaveLoadSystemUtils::IsSavedWorldValid(const FMySavedWorld* const InWorld, bool const bInLogged)
 {
 	if(IsSavedWorldMetaValid(&InWorld->FormatMeta, bInLogged))
 	{
@@ -30,7 +30,7 @@ bool UMySaveLoadSystemUtils::IsSavedWorldValid(const FMySavedWorld* InWorld, boo
 	return true;
 }
 
-bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* InMeta, bool bInLogged)
+bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* const InMeta, bool const bInLogged)
 {
 	if(InMeta->Signature != FORMAT_SIGNATURE)
 	{		
@@ -43,7 +43,7 @@ bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* InMe
 	return true;
 }
 
-bool UMySaveLoadSystemUtils::IsSavedObjectValid(UMySaverLoaderBase* InSender, const FMySavedObject* InSavedObj, const FMySavedWorld* InWorld, bool bInLogged)
+bool UMySaveLoadSystemUtils::IsSavedObjectValid(UMySaverLoaderBase* const InSender, const FMySavedObject* const InSavedObj, const FMySavedWorld* const InWorld, bool const bInLogged)
 {
 	check(InSavedObj);
 
@@ -66,7 +66,7 @@ bool UMySaveLoadSystemUtils::IsSavedObjectValid(UMySaverLoaderBase* InSender, co
 	return true;
 }
 
-bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* InSender, const FMySavedWorld* InWorld, int32 InClassIndex, bool bInLogged, const FString& LogPrefix)
+bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const InSender, const FMySavedWorld* const InWorld, int32 const InClassIndex, bool const bInLogged, const FString& LogPrefix)
 {
 	// First of all check object's class index
 	if(InClassIndex < 0)
@@ -90,7 +90,7 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* InSender
 	return true;
 }
 
-void UMySaveLoadSystemUtils::PrepareFormatMetaSaveStruct(UMySaverLoaderBase* InSender, FMySaveFormatMeta* InSavedFormatMeta)
+void UMySaveLoadSystemUtils::PrepareFormatMetaSaveStruct(UMySaverLoaderBase* InSender, FMySaveFormatMeta* const InSavedFormatMeta)
 {
 	UE_LOG(MyLog, Log, TEXT("Preparing save format meta..."));
 	InSavedFormatMeta->Signature = FORMAT_SIGNATURE;
@@ -98,7 +98,7 @@ void UMySaveLoadSystemUtils::PrepareFormatMetaSaveStruct(UMySaverLoaderBase* InS
 	UE_LOG(MyLog, Log, TEXT("Preparing save format meta DONE"));
 }
 
-void UMySaveLoadSystemUtils::PrepareWorldInfoSaveStruct(UMySaverLoaderBase* InSender, FMySavedWorldInfo* InSavedWorldInfo, const UMySaveLoadState* InSaveLoadState)
+void UMySaveLoadSystemUtils::PrepareWorldInfoSaveStruct(UMySaverLoaderBase* InSender, FMySavedWorldInfo* const InSavedWorldInfo, const UMySaveLoadState* const InSaveLoadState)
 {
 	UE_LOG(MyLog, Log, TEXT("Preparing world info save struct..."));
 	InSavedWorldInfo->MapName = InSaveLoadState->MapName;
@@ -106,12 +106,12 @@ void UMySaveLoadSystemUtils::PrepareWorldInfoSaveStruct(UMySaverLoaderBase* InSe
 	UE_LOG(MyLog, Log, TEXT("Preparing world info save struct DONE"));
 }
 
-void UMySaveLoadSystemUtils::PrepareObjectDestructStruct(UMySaverLoaderBase* InSender, FMySavedDestruct* InSavedDestruct, const FName& InUniqueName)
+void UMySaveLoadSystemUtils::PrepareObjectDestructStruct(UMySaverLoaderBase* const InSender, FMySavedDestruct* const InSavedDestruct, const FName& InUniqueName)
 {
 	InSavedDestruct->UniqueName = InUniqueName.ToString();
 }
 
-void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoaderBase* InSender, TArray<FMySavedDestruct>* InSavedDestructedObjects, const TArray<FName>& InDestructedObjects)
+void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedDestruct>* const InSavedDestructedObjects, const TArray<FName>& InDestructedObjects)
 {
 	InSavedDestructedObjects->Reserve(InDestructedObjects.Num());
 	for(FName DestructedName : InDestructedObjects)
@@ -123,25 +123,24 @@ void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoad
 	UE_LOG(MyLog, Log, TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
 }
 
-void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* InSender, FMySavedObject* InSavedObj, TScriptInterface<IMySaveable> InObj)
+void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj)
 {
 	check(InSavedObj);
 	check(InObj);
-	FString const ObjectUniqueName = UMySaveableUtils::GetUniqueName(InObj.GetObject()).ToString();
 	auto ObjData = Cast<UPerObjectSaveLoadData>(InObj->SaveLoad_GetData(InSender));
-	checkf(ObjData, TEXT("Obj data for object \"%s\" with unique name \"%s\" of class \"%s\" must be of class \"PerObjectSaveLoadData\""), *InObj.GetObject()->GetName(), *ObjectUniqueName, *InObj.GetObject()->GetClass()->GetName());
+	checkf(ObjData, TEXT("Obj data for object \"%s\" with unique name \"%s\" of class \"%s\" must be of class \"PerObjectSaveLoadData\""), *InObj.GetObject()->GetName(), *InObj->GetUniqueName(), *InObj.GetObject()->GetClass()->GetName());
 	InSavedObj->ClassIndex = ObjData->ClassIndex;
-	InSavedObj->UniqueName = ObjectUniqueName;
+	InSavedObj->UniqueName = InObj->GetUniqueName();
 }
 
-void UMySaveLoadSystemUtils::PrepareClassSaveStruct(UMySaverLoaderBase* InSender, FMySavedClass* InSavedClass, UClass* InClass)
+void UMySaveLoadSystemUtils::PrepareClassSaveStruct(UMySaverLoaderBase* const InSender, FMySavedClass* const InSavedClass, UClass* const InClass)
 {
 	check(InSavedClass);
 	check(InClass);
 	InSavedClass->Name = InClass->GetName();
 }
 
-void UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(UMySaverLoaderBase* InSender, FMySavedWorld* InSavedWorld, const UMySaveLoadState* InSaveLoadState)
+void UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(UMySaverLoaderBase* const InSender, FMySavedWorld* const InSavedWorld, const UMySaveLoadState* const InSaveLoadState)
 {
 	check(InSaveLoadState);
 	check(InSavedWorld);
@@ -154,10 +153,10 @@ void UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(UMySaverLoaderBase* InSen
 	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->GlobalObjects, InSaveLoadState->GlobalObjects);
 	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->WorldObjects, InSaveLoadState->WorldObjects);
 
-	PrepareDestructedObjects_FromLoadState(InSender, &InSavedWorld->DestructedObjects, InSaveLoadState->DestructedObjects);
+	PrepareDestructedObjects_FromLoadState(InSender, &InSavedWorld->StaticDestructedObjects, InSaveLoadState->StaticDestructedObjects);
 }
 
-void UMySaveLoadSystemUtils::PrepareSaveClasses_FromLoadState(UMySaverLoaderBase* InSender, FMySavedWorld* InSavedWorld, const UMySaveLoadState* InSaveLoadState)
+void UMySaveLoadSystemUtils::PrepareSaveClasses_FromLoadState(UMySaverLoaderBase* const InSender, FMySavedWorld* const InSavedWorld, const UMySaveLoadState* const InSaveLoadState)
 {
 	check(InSaveLoadState);
 	check(InSavedWorld);
@@ -172,7 +171,7 @@ void UMySaveLoadSystemUtils::PrepareSaveClasses_FromLoadState(UMySaverLoaderBase
 	}
 }
 
-void UMySaveLoadSystemUtils::PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* InSender, TArray<FMySavedObject>* InSavedObjects, const TArray<TScriptInterface<IMySaveable>>& InObjects)
+void UMySaveLoadSystemUtils::PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedObject>* const InSavedObjects, const TArray<TScriptInterface<IMySaveable>>& InObjects)
 {
 	check(InSavedObjects);
 
@@ -189,7 +188,7 @@ void UMySaveLoadSystemUtils::PrepareSaveObjects_FromLoadState(UMySaverLoaderBase
 	}
 }
 
-void UMySaveLoadSystemUtils::PrepareObjectSaveData(UMySaverLoaderBase* InSender, FMySavedObject* InSavedObj, TScriptInterface<IMySaveable> InObj)
+void UMySaveLoadSystemUtils::PrepareObjectSaveData(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj)
 {
 	check(InObj);
 	TArray<uint8>& SavedData = InSavedObj->Data;

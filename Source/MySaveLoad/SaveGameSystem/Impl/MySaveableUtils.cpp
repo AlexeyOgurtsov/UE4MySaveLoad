@@ -11,7 +11,7 @@ void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* InObj)
 
 bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InObj, bool bInLogged)
 {
-	if(false == GetUniqueName(InObj).IsNone() && false == GetUniqueName(InObj).ToString().IsEmpty())
+	if(false == InObj->GetUniqueFName().IsNone())
 	{
 		if(bInLogged)
 		{
@@ -31,12 +31,12 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InObj, bool
 bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> InObj, bool bInLogged)
 {
 	// When SaveLoad is disabled, any combination of flags is valid
-	if( false == IsSaveLoad(InObj) )
+	if( false == InObj->IsSaveLoad() )
 	{
 		return true;
 	}
 
-	if(IsDynamic(InObj) && IsGlobal(InObj))
+	if(InObj->IsDynamic() && InObj->IsGlobal())
 	{
 		if(bInLogged)
 		{
@@ -46,36 +46,4 @@ bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> InObj
 	}
 
 	return true;
-}
-
-const FName& UMySaveableUtils::GetUniqueName(TScriptInterface<IMySaveable> InObj)
-{
-	const FMySaveableStaticProps& Props = InObj->SaveLoad_GetStaticProps();
-	return Props.UniqueName;
-}
-
-bool UMySaveableUtils::IsGlobal(TScriptInterface<IMySaveable> InObj)
-{
-	const FMySaveablePerClassProps& Props = InObj->SaveLoad_GetClassProps();
-
-	return (Props.Flags & EMySaveablePerClassFlags::GlobalObject) != EMySaveablePerClassFlags::None;
-}
-
-bool UMySaveableUtils::IsSaveLoad(TScriptInterface<IMySaveable> InObj)
-{
-	const FMySaveableStaticProps& Props = InObj->SaveLoad_GetStaticProps();
-
-	return (Props.Flags & EMySaveableStaticFlags::SaveLoad) != EMySaveableStaticFlags::None;
-}
-
-bool UMySaveableUtils::IsDynamic(TScriptInterface<IMySaveable> InObj)
-{
-	const FMySaveableStaticProps& Props = InObj->SaveLoad_GetStaticProps();
-
-	return (Props.Flags & EMySaveableStaticFlags::Dynamic) != EMySaveableStaticFlags::None;
-}
-
-bool UMySaveableUtils::IsStatic(TScriptInterface<IMySaveable> InObj)
-{
-	return false == IsDynamic(InObj);
 }

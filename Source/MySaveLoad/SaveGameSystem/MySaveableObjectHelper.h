@@ -17,7 +17,7 @@ struct FMySaveableObjectHelper
 	GENERATED_BODY()
 
 	FMySaveableObjectHelper();
-	FMySaveableObjectHelper(TScriptInterface<IMySaveable> InSaveableObject, IMySaveSystem* InSys);
+	FMySaveableObjectHelper(TScriptInterface<IMySaveable> const InSaveableObject, IMySaveSystem* const InSys);
 
 	// ~Helper getters Begin
 	IMySaveSystem* GetSys() const;
@@ -35,8 +35,8 @@ struct FMySaveableObjectHelper
 	const FMySaveablePerClassProps& GetClassProps() const { return ClassProps; }
 	const FMySaveableStaticProps& GetStaticProps() const { return StaticProps; }
 
-	void AssignData(UMySaverLoaderBase* InSender, UPerObjectSaveLoadDataBase* Data);
-	UPerObjectSaveLoadDataBase* GetData(UMySaverLoaderBase* InSender) const { return Data; }
+	void AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const Data);
+	UPerObjectSaveLoadDataBase* GetData(UMySaverLoaderBase* const InSender) const { return Data; }
 	// ~IMySaveable mirrored methods End
 
 	// ~IMySaveable default Begin

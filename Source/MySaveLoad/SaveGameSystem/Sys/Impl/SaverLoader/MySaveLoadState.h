@@ -31,7 +31,7 @@ public:
 	TArray<TScriptInterface<IMySaveable>> WorldObjects;
 
 	UPROPERTY()
-	TArray<FName> DestructedObjects;
+	TArray<FName> StaticDestructedObjects;
 
 private:
 };

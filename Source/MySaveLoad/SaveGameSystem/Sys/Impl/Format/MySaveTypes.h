@@ -136,7 +136,7 @@ struct FMySavedWorld
 	* List of objects that existed initially, but were destroyed.
 	*/
 	UPROPERTY()
-	TArray<FMySavedDestruct> DestructedObjects;
+	TArray<FMySavedDestruct> StaticDestructedObjects;
 };
 
 inline FArchive& operator<<(FArchive& Ar, FMySavedWorld& InWorld)
@@ -146,7 +146,7 @@ inline FArchive& operator<<(FArchive& Ar, FMySavedWorld& InWorld)
 	Ar << InWorld.Classes;
 	Ar << InWorld.GlobalObjects;
 	Ar << InWorld.WorldObjects;
-	Ar << InWorld.DestructedObjects;
+	Ar << InWorld.StaticDestructedObjects;
 	return Ar;
 }
 

@@ -67,6 +67,16 @@ class IMySaveable
 	GENERATED_BODY()
 
 public:
+	// ~Helper getters Begin
+	FString GetUniqueName() const;
+	const FName& GetUniqueFName() const;
+
+	bool IsGlobal() const;
+	bool IsSaveLoad() const;
+	bool IsDynamic() const;
+	bool IsStatic() const;
+	// ~Helper getters End
+
 	/**
 	* Per-Class props
 	*/

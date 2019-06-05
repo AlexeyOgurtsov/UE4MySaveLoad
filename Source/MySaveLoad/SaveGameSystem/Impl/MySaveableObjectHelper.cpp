@@ -15,7 +15,7 @@ FMySaveableObjectHelper::FMySaveableObjectHelper()
 	InitPrefixString();
 }
 
-FMySaveableObjectHelper::FMySaveableObjectHelper(TScriptInterface<IMySaveable> InSaveableObject, IMySaveSystem* InSys)
+FMySaveableObjectHelper::FMySaveableObjectHelper(TScriptInterface<IMySaveable> const InSaveableObject, IMySaveSystem* const InSys)
 {
 	check(InSaveableObject);
 	check(InSys);
@@ -29,9 +29,9 @@ FMySaveableObjectHelper::FMySaveableObjectHelper(TScriptInterface<IMySaveable> I
 void FMySaveableObjectHelper::InitPrefixString()
 {
 	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(*SaveableObject.GetObject()->GetName()); 
-	FormatArgs.Add(UMySaveableUtils::GetUniqueName(SaveableObject).ToString());
-	FormatArgs.Add(*SaveableObject.GetObject()->GetClass()->GetName());
+	FormatArgs.Add(SaveableObject.GetObject()->GetName()); 
+	FormatArgs.Add(SaveableObject->GetUniqueName());
+	FormatArgs.Add(SaveableObject.GetObject()->GetClass()->GetName());
 	PrefixString = FString::Format(TEXT("FMySaveableObjectHelper for object \"{0}\" with UniqueName \"{1}\" of class \"{2}\":"), FormatArgs);
 }
 
@@ -40,7 +40,7 @@ IMySaveSystem* FMySaveableObjectHelper::GetSys() const
 	return Sys;
 }
 
-void FMySaveableObjectHelper::AssignData(UMySaverLoaderBase* InSender, UPerObjectSaveLoadDataBase* InData)
+void FMySaveableObjectHelper::AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
 {		
 	UE_LOG(MyLog, Log, TEXT("%s AssignData"), *PrefixString);
 	Data = InData;

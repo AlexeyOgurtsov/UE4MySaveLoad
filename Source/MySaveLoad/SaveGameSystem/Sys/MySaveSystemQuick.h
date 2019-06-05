@@ -23,9 +23,9 @@ public:
 	/**
 	* Gets names of all destructed objects.
 	*/
-	virtual TArray<FName> GetDestructedObjects() const override { return DestructedObjects; }
+	virtual TArray<FName> GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
 
 private:
 	UPROPERTY()
-	TArray<FName> DestructedObjects;
+	TArray<FName> StaticDestructedObjects;
 };

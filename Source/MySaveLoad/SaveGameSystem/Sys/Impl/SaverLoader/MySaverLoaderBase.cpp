@@ -3,7 +3,6 @@
 #include "PerObjectSaveLoadData.h"
 
 #include "SaveGameSystem/IMySaveable.h"
-#include "SaveGameSystem/MySaveableUtils.h"
 #include "../Sys/IMySaveSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 
@@ -15,10 +14,10 @@
 
 void UMySaverLoaderBase::SetupSaverLoaderBase
 (
-	ESaverOrLoader InSaverOrLoader, 
-	IMySaveSystemInternal* InSys,
-	FArchive* InArchive, UWorld* InWorld,
-	UMySaveLoadState* InCommState
+	ESaverOrLoader const InSaverOrLoader, 
+	IMySaveSystemInternal* const InSys,
+	FArchive* const InArchive, UWorld* const InWorld,
+	UMySaveLoadState* const InCommState
 )
 {
 	UE_LOG(MyLog, Log, TEXT("SetupSaverLoaderBase..."));
@@ -72,19 +71,19 @@ void UMySaverLoaderBase::AssignDataToAllObjects()
 	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects DONE"));
 }
 
-void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> InObj)
+void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> const InObj)
 {
 	check(InObj);
 	auto Data = NewObject<UPerObjectSaveLoadDataBase>(GetPerObjectDataClass());
 	InObj->SaveLoad_AssignData(this, Data);
 }
 
-bool UMySaverLoaderBase::IsGlobalObject(UObject* InObject) const
+bool UMySaverLoaderBase::IsGlobalObject(UObject* const InObject) const
 {
 	return CommState->GlobalObjects.Contains(TScriptInterface<IMySaveable>(InObject));
 }
 
-bool UMySaverLoaderBase::ShouldObjectBeSaved(UObject* InObj, bool bInLogged, bool bLogOnFalseOnly) const
+bool UMySaverLoaderBase::ShouldObjectBeSaved(UObject* const InObj, bool const bInLogged, bool const bLogOnFalseOnly) const
 {
 	if(InObj == nullptr)
 	{
@@ -96,19 +95,18 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(UObject* InObj, bool bInLogged, boo
 	}
 
 	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(*InObj->GetName());
-	FormatArgs.Add(*InObj->GetClass()->GetName());
+	FormatArgs.Add(InObj->GetName());
+	FormatArgs.Add(InObj->GetClass()->GetName());
 	FString PrefixString = FString::Format(TEXT("Object \"%s\" of class \"%s\""), FormatArgs);
 
-	if(IMySaveable* SaveableObj = Cast<IMySaveable>(InObj))
+	if(IMySaveable* Sav = Cast<IMySaveable>(InObj))
 	{
-		FName UniqueName = UMySaveableUtils::GetUniqueName(InObj);
 		if(bInLogged && (false == bLogOnFalseOnly) )
 		{
-			UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *UniqueName.ToString());
+			UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *Sav->GetUniqueName());
 		}
 
-		if(false == UMySaveableUtils::IsSaveLoad(InObj))
+		if(false == Sav->IsSaveLoad())
 		{
 			if(bInLogged)
 			{

@@ -1,9 +1,9 @@
 #include "MyLoaderBase.h"
 #include "MySaveLoadState.h"
+#include "../Sys/IMySaveSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 #include "SaveGameSystem/IMySaveable.h"
 #include "SaveGameSystem/MySaveableUtils.h"
-#include "../Sys/IMySaveSystemInternal.h"
 
 #include "Util/Core/LogUtilLib.h"
 
@@ -15,7 +15,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMyLoaderBase::SetupLoaderBase(IMySaveSystemInternal* InSys, FArchive* InArchive, UWorld* InWorld, UMySaveLoadState* InCommState)
+void UMyLoaderBase::SetupLoaderBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase..."));
 
@@ -132,11 +132,11 @@ void UMyLoaderBase::LoadSavedClass(int32 InClassIndex, UClass**ppOutClass, const
 void UMyLoaderBase::DestroyExtraObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("Destrong extra objects..."));
-	UE_LOG(MyLog, Log, TEXT("%d objects are marked as destroyed in the save file"), GetBinaryWorld().DestructedObjects.Num());
-	GetCommState()->DestructedObjects.Reserve(GetBinaryWorld().DestructedObjects.Num());
-	for(const FMySavedDestruct& SavedObjectToDestruct: GetBinaryWorld().DestructedObjects)
+	UE_LOG(MyLog, Log, TEXT("%d objects are marked as destroyed in the save file"), GetBinaryWorld().StaticDestructedObjects.Num());
+	GetCommState()->StaticDestructedObjects.Reserve(GetBinaryWorld().StaticDestructedObjects.Num());
+	for(const FMySavedDestruct& SavedObjectToDestruct: GetBinaryWorld().StaticDestructedObjects)
 	{
-		GetCommState()->DestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
+		GetCommState()->StaticDestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
 
 		// @TODO: Find object by name
 		UE_LOG(MyLog, Error, TEXT("not yet impl")); TScriptInterface<IMySaveable> Obj = nullptr;
@@ -144,8 +144,8 @@ void UMyLoaderBase::DestroyExtraObjects()
 		if(Obj)
 		{
 			TArray<FStringFormatArg> FormatArgs;
-			FormatArgs.Add(*UMySaveableUtils::GetUniqueName(Obj).ToString());
-			FormatArgs.Add(*Obj.GetObject()->GetClass()->GetName());
+			FormatArgs.Add(Obj->GetUniqueName());
+			FormatArgs.Add(Obj.GetObject()->GetClass()->GetName());
 			FString PrefixString = FString::Format(TEXT("Destring extra object: checking object with UniqueName \"{0}\" of class \"{1}\": "), FormatArgs);
 
 			UE_LOG(MyLog, Log, TEXT("%sDestroying object..."), *PrefixString);
@@ -162,16 +162,16 @@ void UMyLoaderBase::DestroyExtraObjects()
 	UE_LOG(MyLog, Log, TEXT("Destrong extra objects DONE"));
 }
 
-void UMyLoaderBase::CheckObjectBeforeDestruct(TScriptInterface<IMySaveable> Obj)
+void UMyLoaderBase::CheckObjectBeforeDestruct(TScriptInterface<IMySaveable> const Obj)
 {
 	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(*Obj.GetObject()->GetName());
-	FormatArgs.Add(UMySaveableUtils::GetUniqueName(Obj).ToString());
-	FormatArgs.Add(*Obj.GetObject()->GetClass()->GetName());
-	FString PrefixString = FString::Format(TEXT("For object named \"{0}\" with UniqueName \"{1}\" of class \"{2}\": "), FormatArgs);
+	FormatArgs.Add(Obj.GetObject()->GetName());
+	FormatArgs.Add(Obj->GetUniqueName());
+	FormatArgs.Add(Obj.GetObject()->GetClass()->GetName());
+	FString const PrefixString = FString::Format(TEXT("For object named \"{0}\" with UniqueName \"{1}\" of class \"{2}\": "), FormatArgs);
 }
 
-TScriptInterface<IMySaveable> UMyLoaderBase::LoadSavedObject(const FMySavedObject* pSavedObject)
+TScriptInterface<IMySaveable> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)
 {
 	UE_LOG(MyLog, Error, TEXT("Not yet impl")); return nullptr;
 }
