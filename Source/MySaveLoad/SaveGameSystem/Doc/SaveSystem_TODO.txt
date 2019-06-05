@@ -1,0 +1,54 @@
+TODO
+1. Global library (service) for working with SaveSystem entirely
+
+*** Service locator:
+1. Which system interface to be available (internal or public)?
+2. Should we provide access to loader/saver?
+
+*** Saveable object helper
+1. How to access SaveSystem
+2. Flags: some flags to be available within blueprint as per-object property (is SaveLoad at all).
+
+*** Save format:
+1. Identification by name: GetName() is not unique!
+GetPathName()?
+2. ISaveable: Unique name
+2.1. Provide helper accessor
+2.2. Provide default implementation
+2.3. Check that all names are UNIQUE!
+2.4. Use it instead of FName:
+2.4.1. Loader
+
+*** Save Load 
+1. Fail of load/save should not be fatal error!!!
+
+*** Save format
+1. What about saving Outer?
+
+*** 
+1. Provide Reserve/Resize calls
+
+*** Subsystem:
+1. Is it good name "DestructedObjects" if we store only DYNAMIC destructed objects here?
+
+*** Info serialization
+FName storage?
+
+***************************** Info
+*** Info world
+1. Map name
+
+*** Info object
+1. Event when object destructed (so we can automatically subscribe to it inside the system code)
+2. Is object was presented at the start of the level or was created dynamically?
+3. Is object was named manually or object name was generated automatically?
+
+4. Find object by name (in the world)
+
+*** Info destructing object
+1. Is is safe to call BeginDestroy, if NO GAMEPLAY code references are to the object?
+2. What about Obj->MarkPendingKill?
+3. RF_PendingKill?
+
+*** Info class
+1. Class serialization
