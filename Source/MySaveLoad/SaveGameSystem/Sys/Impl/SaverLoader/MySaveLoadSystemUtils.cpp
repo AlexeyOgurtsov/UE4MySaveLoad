@@ -131,7 +131,7 @@ void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const I
 	auto ObjData = Cast<UPerObjectSaveLoadData>(InObj->SaveLoad_GetHandle()->SaveLoad_GetData(InSender));
 	checkf(ObjData, TEXT("Obj data for object %s must be of class \"%s\""), *InObj->SaveLoad_ToString(), *UPerObjectSaveLoadData::StaticClass()->GetName());
 	InSavedObj->ClassIndex = ObjData->ClassIndex;
-	InSavedObj->UniqueName = InObj->GetUniqueName();
+	InSavedObj->UniqueName = InObj->SaveLoad_GetUniqueName();
 }
 
 void UMySaveLoadSystemUtils::PrepareClassSaveStruct(UMySaverLoaderBase* const InSender, FMySavedClass* const InSavedClass, UClass* const InClass)

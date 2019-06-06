@@ -21,7 +21,7 @@ class IMySaveSystem
 
 public:
 	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InSaveable) = 0;
-	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InSaveable) = 0;
+	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> InSaveableHandle) = 0;
 };
 
 

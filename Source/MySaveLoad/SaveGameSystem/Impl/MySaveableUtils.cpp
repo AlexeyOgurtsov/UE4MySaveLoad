@@ -11,7 +11,7 @@ void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* InObj)
 
 bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InSaveable, bool bInLogged)
 {
-	if(false == InSaveable->GetUniqueFName().IsNone())
+	if(false == InSaveable->SaveLoad_GetUniqueFName().IsNone())
 	{
 		if(bInLogged)
 		{
@@ -31,12 +31,12 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InSaveable,
 bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> InSaveable, bool bInLogged)
 {
 	// When SaveLoad is disabled, any combination of flags is valid
-	if( false == InSaveable->IsSaveLoad() )
+	if( false == InSaveable->SaveLoad_IsEnabled() )
 	{
 		return true;
 	}
 
-	if(InSaveable->IsDynamic() && InSaveable->IsGlobal())
+	if(InSaveable->SaveLoad_IsDynamic() && InSaveable->SaveLoad_IsGlobal())
 	{
 		if(bInLogged)
 		{

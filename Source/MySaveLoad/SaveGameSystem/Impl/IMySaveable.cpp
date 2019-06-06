@@ -1,63 +1,58 @@
 #include "SaveGameSystem/IMySaveable.h"
+#include "SaveGameSystem/IMySaveableHandle.h"
 #include "Util/Core/LogUtilLib.h"
 
 FString IMySaveable::SaveLoad_ToString() const
 {
-	const UObject* const ThisObj = Cast<UObject>(this);
-	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(GetUniqueName());
-	FormatArgs.Add(ThisObj->GetName());
-	FormatArgs.Add(ThisObj->GetClass()->GetName());
-	return FString::Format(TEXT("{UniqueName=\"{0}\"; Name=\"{1}\"; Class=\"{2}\"}"), FormatArgs);
+	return SaveLoad_GetHandle()->SaveLoad_ToString();
 }
 
 FString IMySaveable::SaveLoad_ToStringPrefixed(const FString& InPrefix)
 {
-	FString Result = InPrefix;
-	Result.Append(TEXT(": "));
-	Result.Append(SaveLoad_ToString());
-	return Result;
+	return SaveLoad_GetHandle()->SaveLoad_ToStringPrefixed(InPrefix);
 }
 
 FString IMySaveable::SaveLoad_GetPrefixString(const FString& InPrefix)
 {
-	FString Result = InPrefix;
-	Result.Append(TEXT(" for "));
-	Result.Append(SaveLoad_ToString());
-	Result.Append(TEXT(":"));
-	return Result;
+	return SaveLoad_GetHandle()->SaveLoad_GetPrefixString(InPrefix);
 }
 
-FString IMySaveable::GetUniqueName() const
+FString IMySaveable::SaveLoad_GetUniqueName() const
 {
-	return GetUniqueFName().ToString();
+	return SaveLoad_GetHandle()->SaveLoad_GetUniqueName();
 }
 
-const FName& IMySaveable::GetUniqueFName() const
+const FName& IMySaveable::SaveLoad_GetUniqueFName() const
 {
-	const FMySaveableStaticProps& Props = SaveLoad_GetStaticProps();
-	return Props.UniqueName;
+	return SaveLoad_GetHandle()->SaveLoad_GetUniqueFName();
 }
 
-bool IMySaveable::IsGlobal() const
+bool IMySaveable::SaveLoad_IsGlobal() const
 {
-	const FMySaveablePerClassProps& Props = SaveLoad_GetClassProps();
-	return (Props.Flags & EMySaveablePerClassFlags::GlobalObject) != EMySaveablePerClassFlags::None;
+	return SaveLoad_GetHandle()->SaveLoad_IsGlobal();
 }
 
-bool IMySaveable::IsSaveLoad() const
+bool IMySaveable::SaveLoad_IsEnabled() const
 {
-	const FMySaveableStaticProps& Props = SaveLoad_GetStaticProps();
-	return (Props.Flags & EMySaveableStaticFlags::SaveLoad) != EMySaveableStaticFlags::None;
+	return SaveLoad_GetHandle()->SaveLoad_IsEnabled();
 }
 
-bool IMySaveable::IsDynamic() const
+bool IMySaveable::SaveLoad_IsDynamic() const
 {
-	const FMySaveableStaticProps& Props = SaveLoad_GetStaticProps();
-	return (Props.Flags & EMySaveableStaticFlags::Dynamic) != EMySaveableStaticFlags::None;
+	return SaveLoad_GetHandle()->SaveLoad_IsDynamic();
 }
 
-bool IMySaveable::IsStatic() const
+bool IMySaveable::SaveLoad_IsStatic() const
 {
-	return false == IsDynamic();
+	return SaveLoad_GetHandle()->SaveLoad_IsStatic();
+}
+
+const FMySaveablePerClassProps& IMySaveable::SaveLoad_GetClassProps() const
+{
+	return SaveLoad_GetHandle()->SaveLoad_GetClassProps();
+}
+
+const FMySaveableStaticProps& IMySaveable::SaveLoad_GetStaticProps() const
+{
+	return SaveLoad_GetHandle()->SaveLoad_GetStaticProps();
 }

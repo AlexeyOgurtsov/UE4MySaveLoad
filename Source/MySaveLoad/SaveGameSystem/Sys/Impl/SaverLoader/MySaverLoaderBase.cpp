@@ -104,10 +104,10 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(UObject* const InObj, bool const bI
 	{
 		if(bInLogged && (false == bLogOnFalseOnly) )
 		{
-			UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *Sav->GetUniqueName());
+			UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *Sav->SaveLoad_GetUniqueName());
 		}
 
-		if(false == Sav->IsSaveLoad())
+		if(false == Sav->SaveLoad_IsEnabled())
 		{
 			if(bInLogged)
 			{

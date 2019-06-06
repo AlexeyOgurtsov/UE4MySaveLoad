@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>152</x>
+      <y>8</y>
+      <w>232</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Gameplay to Save system interaction
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLInterface</id>
+    <coordinates>
+      <x>640</x>
+      <y>112</y>
+      <w>240</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>IMySaveLoadSystem
+--
++ CreateSaveableHandle(InSaveable)
++ NotifyObjectDestructed(InSaveableHandle)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLInterface</id>
+    <coordinates>
+      <x>56</x>
+      <y>112</y>
+      <w>256</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>IMySaveable
+--
+/+ FString SaveLoad_ToString() &lt;&lt;const&gt;&gt;/
+/+ SaveLoad_Serialize(Ar : &amp;FArchive)/
+/+ SaveLoad_BeforeDestroy()/
+/+ SaveLoad_AllObjectsLoaded(Ar : &amp;FArchive)/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLInterface</id>
+    <coordinates>
+      <x>320</x>
+      <y>144</y>
+      <w>336</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>IMySaveableHandle
+--
++ SaveLoad_AssignData(Data : *UPerObjectSaveLoadDataBase)
++ SaveLoad_GetData()
++ SaveLoad_GetSaveable() &lt;&lt;const&gt;&gt;
++ SaveLoad_GetClassProps() &lt;&lt;const&gt;&gt;
++ SaveLoad_GetStaticProps() &lt;&lt;const&gt;&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>184</x>
+      <y>120</y>
+      <w>584</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>710.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>488</x>
+      <y>120</y>
+      <w>280</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;instantiate&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;50.0;330.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>184</x>
+      <y>120</y>
+      <w>312</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;30.0;370.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>24</x>
+      <y>88</y>
+      <w>840</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>SaveLoad</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>24</x>
+      <y>344</y>
+      <w>816</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Gameplay</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>176</x>
+      <y>400</y>
+      <w>160</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>GameplayObject</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>40</x>
+      <y>120</y>
+      <w>152</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0;10.0;380.0;170.0;380.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>304</x>
+      <y>152</y>
+      <w>192</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;330.0;10.0;30.0;220.0;10.0</additional_attributes>
+  </element>
+</diagram>

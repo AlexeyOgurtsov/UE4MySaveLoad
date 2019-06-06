@@ -144,7 +144,7 @@ void UMyLoaderBase::DestroyExtraObjects()
 		if(Obj)
 		{
 			TArray<FStringFormatArg> FormatArgs;
-			FormatArgs.Add(Obj->GetUniqueName());
+			FormatArgs.Add(Obj->SaveLoad_GetUniqueName());
 			FormatArgs.Add(Obj.GetObject()->GetClass()->GetName());
 			FString PrefixString = FString::Format(TEXT("Destring extra object: checking object with UniqueName \"{0}\" of class \"{1}\": "), FormatArgs);
 

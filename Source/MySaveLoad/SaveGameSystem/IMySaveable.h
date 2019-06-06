@@ -19,17 +19,18 @@ class IMySaveable
 
 public:
 	// ~Helper getters Begin
-	FString GetUniqueName() const;
-	const FName& GetUniqueFName() const;
+	FString SaveLoad_GetUniqueName() const;
+	const FName& SaveLoad_GetUniqueFName() const;
 
-	bool IsGlobal() const;
-	bool IsSaveLoad() const;
-	bool IsDynamic() const;
-	bool IsStatic() const;
-	// ~Helper getters End
+	bool SaveLoad_IsEnabled() const;
+	bool SaveLoad_IsGlobal() const;
+	bool SaveLoad_IsDynamic() const;
+	bool SaveLoad_IsStatic() const;
 
-	virtual FString SaveLoad_ToString() const = 0;
-	virtual TScriptInterface<IMySaveableHandle> SaveLoad_GetHandle() const = 0;
+	const FMySaveablePerClassProps& SaveLoad_GetClassProps() const;
+	const FMySaveableStaticProps& SaveLoad_GetStaticProps() const;
+
+	FString SaveLoad_ToString() const;
 
 	/**
 	* Returns string in form "{Prefix}: {SaveLoad_ToString() result}"
@@ -40,13 +41,10 @@ public:
 	* Returns string formatted like a prefix string (for function calls, for example).
 	*/
 	FString SaveLoad_GetPrefixString(const FString& InPrefix);
-	
-	/**
-	* Per-Class props
-	*/
-	virtual const FMySaveablePerClassProps& SaveLoad_GetClassProps() const = 0;
+	// ~Helper getters End
 
-	virtual const FMySaveableStaticProps& SaveLoad_GetStaticProps() const = 0;
+	virtual TScriptInterface<IMySaveableHandle> SaveLoad_GetHandle() const = 0;
+	
 	virtual void SaveLoad_Serialize(FArchive& Ar) = 0;
 
 	/**

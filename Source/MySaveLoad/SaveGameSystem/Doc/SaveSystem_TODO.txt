@@ -1,5 +1,8 @@
 TODO Today:
-Rename IMySaveload: to include SaveLoad_ prefix
+1. Rename IMySaveLoad: to include SaveLoad_ prefix
+2. IMySaveableHandle: GetSaveData/AssignSaveData:
+2.1. Sender: must be public available type, not UMySaverLoaderBase, which is quick saveload subsystem implemetation specific.
+3. IsSaveLoad() - should it be checked when registering saveload objects in the system?
 
 0. Saveable utils:
 0.1 LogSaveable

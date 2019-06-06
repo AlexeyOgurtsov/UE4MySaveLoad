@@ -40,6 +40,11 @@ public:
 	void Notify_BeginDestroy();
 	// ~Object notification methods End
 
+	virtual TScriptInterface<IMySaveable> SaveLoad_GetSaveable() const override { return Saveable; }
+
+	virtual const FMySaveablePerClassProps& SaveLoad_GetClassProps() const override { return ClassProps; }
+	virtual const FMySaveableStaticProps& SaveLoad_GetStaticProps() const override { return StaticProps; }
+
 	// ~SaveLoad data Begin
 	/**
 	* Assign data (to be called from loader only!).
@@ -47,11 +52,6 @@ public:
 	virtual void SaveLoad_AssignData(UMySaverLoaderBase* InSender, UPerObjectSaveLoadDataBase* Data) override;
 	virtual UPerObjectSaveLoadDataBase* SaveLoad_GetData(UMySaverLoaderBase* InSender) const override { return Data; }
 	// ~SaveLoad data End
-
-	// ~IMySaveable mirrored methods Begin
-	const FMySaveablePerClassProps& GetClassProps() const { return ClassProps; }
-	const FMySaveableStaticProps& GetStaticProps() const { return StaticProps; }
-	// ~IMySaveable mirrored methods End
 
 	// ~IMySaveable default Begin
 	void Default_Serialize(FArchive& Ar);

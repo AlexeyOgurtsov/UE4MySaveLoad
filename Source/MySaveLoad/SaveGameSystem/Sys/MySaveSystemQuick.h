@@ -7,6 +7,8 @@
 #include "SaveGameSystem/Sys/Impl/Sys/IMySaveSystemInternal.h"
 #include "MySaveSystemQuick.generated.h"
 
+class IMySaveableHandle;
+
 UCLASS()
 class UMySaveSystemQuick : 
 	public UObject, 
@@ -17,7 +19,7 @@ class UMySaveSystemQuick :
 public:
 	// ~IMySaveSystem Begin
 	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InObject) override;
-	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InObject) override;
+	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> InSaveableHandle) override;
 	// ~IMySaveSystem End
 
 	// ~IMySaveSystemInternal Begin
@@ -26,7 +28,7 @@ public:
 	// ~IMySaveSystemInternal End
 
 private:
-	void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable);
+	void RegisterSaveableObject(TScriptInterface<IMySaveableHandle> InSaveable);
 
 	UPROPERTY()
 	TArray<TScriptInterface<IMySaveable>> SaveableObjects;

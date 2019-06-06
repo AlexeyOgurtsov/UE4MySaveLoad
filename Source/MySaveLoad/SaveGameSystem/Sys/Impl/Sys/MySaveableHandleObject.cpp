@@ -52,7 +52,7 @@ void UMySaveableHandleObject::Notify_BeginDestroy()
 	UE_LOG(MyLog, Log, TEXT("%s Notify_BeginDestroy is called"), *PrefixString);
 	// WARNING!!! Here we must notify about ANY object destruction (NOT only for NON-created dynamically),
 	// the subsystem must determine by itself, whether it should do anything with this object	
-	Sys->NotifyObjectDestructed(GetSaveableObject());
+	Sys->NotifyObjectDestructed(this);
 }
 
 void UMySaveableHandleObject::Default_Serialize(FArchive& Ar)
