@@ -3,19 +3,19 @@
 /**
 * Public interface of the save system (for calls from IMySaveable, for example).
 */
-#include "IMySaveSystem.generated.h"
+#include "IMySaveLoadSystem.generated.h"
 
 class IMySaveable;
 class IMySaveableHandle;
 
 UINTERFACE()
-class UMySaveSystem : public UInterface
+class UMySaveLoadSystem : public UInterface
 {
 	GENERATED_BODY()
 };
 
 
-class IMySaveSystem
+class IMySaveLoadSystem
 {
 	GENERATED_BODY()
 

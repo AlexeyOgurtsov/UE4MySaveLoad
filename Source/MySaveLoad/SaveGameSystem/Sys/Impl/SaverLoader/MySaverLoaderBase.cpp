@@ -4,7 +4,7 @@
 
 #include "SaveGameSystem/IMySaveable.h"
 #include "SaveGameSystem/IMySaveableHandle.h"
-#include "../Sys/IMySaveSystemInternal.h"
+#include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 
 #include "Util/Core/LogUtilLib.h"
@@ -16,7 +16,7 @@
 void UMySaverLoaderBase::SetupSaverLoaderBase
 (
 	ESaverOrLoader const InSaverOrLoader, 
-	IMySaveSystemInternal* const InSys,
+	IMySaveLoadSystemInternal* const InSys,
 	FArchive* const InArchive, UWorld* const InWorld,
 	UMySaveLoadState* const InCommState
 )

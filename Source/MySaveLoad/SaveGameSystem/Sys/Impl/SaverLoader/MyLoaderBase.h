@@ -19,7 +19,7 @@ class UMyLoaderBase :  public UMySaverLoaderBase
 public:
 	void SetupLoaderBase
 	(
-		IMySaveSystemInternal* InSys, 
+		IMySaveLoadSystemInternal* InSys, 
 		FArchive* InArchive, UWorld* InWorld, 
 		UMySaveLoadState* InState
 	);

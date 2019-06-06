@@ -5,7 +5,7 @@
 #include "SaveGameSystem/IMySaveableHandle.h"
 #include "SaveGameSystem/MySaveableUtils.h"
 #include "PerObjectSaveLoadData.h"
-#include "../Sys/IMySaveSystemInternal.h"
+#include "../Sys/IMySaveLoadSystemInternal.h"
 
 #include "Util/Core/LogUtilLib.h"
 
@@ -17,7 +17,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMySaverBase::SetupSaverBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
+void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupSaverBase..."));
 

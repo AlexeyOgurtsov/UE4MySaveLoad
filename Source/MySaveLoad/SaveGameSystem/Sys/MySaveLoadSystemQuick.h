@@ -4,28 +4,28 @@
 * Quick implementation of the Save system.
 */
 
-#include "SaveGameSystem/Sys/Impl/Sys/IMySaveSystemInternal.h"
-#include "MySaveSystemQuick.generated.h"
+#include "SaveGameSystem/Sys/Impl/Sys/IMySaveLoadSystemInternal.h"
+#include "MySaveLoadSystemQuick.generated.h"
 
 class IMySaveableHandle;
 
 UCLASS()
-class UMySaveSystemQuick : 
+class UMySaveLoadSystemQuick : 
 	public UObject, 
-	public IMySaveSystemInternal
+	public IMySaveLoadSystemInternal
 {
 	GENERATED_BODY()
 
 public:
-	// ~IMySaveSystem Begin
+	// ~IMySaveLoadSystem Begin
 	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InObject) override;
 	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> InSaveableHandle) override;
-	// ~IMySaveSystem End
+	// ~IMySaveLoadSystem End
 
-	// ~IMySaveSystemInternal Begin
+	// ~IMySaveLoadSystemInternal Begin
 	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const override { return SaveableObjects; }
 	virtual const TArray<FName>& GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
-	// ~IMySaveSystemInternal End
+	// ~IMySaveLoadSystemInternal End
 
 private:
 	void RegisterSaveableObject(TScriptInterface<IMySaveableHandle> InSaveable);

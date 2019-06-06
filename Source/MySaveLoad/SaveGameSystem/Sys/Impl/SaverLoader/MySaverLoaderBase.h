@@ -5,7 +5,7 @@
 */
 
 #include "../Format/MySaveTypes.h"
-#include "../Sys/IMySaveSystemInternal.h"
+#include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaverLoaderBase.generated.h"
 
 class UMySaveLoadState;
@@ -13,7 +13,7 @@ class UMySaveState;
 class UPerObjectSaveLoadDataBase;
 
 class IMySaveable;
-class IMySaveSystemInternal;
+class IMySaveLoadSystemInternal;
 
 class FArchive;
 
@@ -34,12 +34,12 @@ public:
 	void SetupSaverLoaderBase
 	(
 		ESaverOrLoader InSaverOrLoader,
-		IMySaveSystemInternal* InSys,
+		IMySaveLoadSystemInternal* InSys,
 		FArchive* InArchive, UWorld* InWorld,
 		UMySaveLoadState* InCommState
 	);
 
-	IMySaveSystemInternal* GetSys() const { return Sys; }
+	IMySaveLoadSystemInternal* GetSys() const { return Sys; }
 
 	FArchive& GetAr() const { return *Ar; }
 	virtual UWorld* GetWorld() const override { return World; }
@@ -79,7 +79,7 @@ protected:
 	void AssignObjectData(TScriptInterface<IMySaveable> InObj);
 
 private:
-	IMySaveSystemInternal* Sys = nullptr;
+	IMySaveLoadSystemInternal* Sys = nullptr;
 
 	FArchive* Ar = nullptr;
 

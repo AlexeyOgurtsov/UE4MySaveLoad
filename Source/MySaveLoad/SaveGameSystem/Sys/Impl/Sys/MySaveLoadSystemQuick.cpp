@@ -1,19 +1,19 @@
-#include "SaveGameSystem/Sys/MySaveSystemQuick.h"
+#include "SaveGameSystem/Sys/MySaveLoadSystemQuick.h"
 #include "SaveGameSystem/IMySaveable.h"
 #include "../../MySaveableHandleObject.h"
 
 #include "Util/Core/LogUtilLib.h"
 
-TScriptInterface<IMySaveableHandle> UMySaveSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
+TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
 {
 	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::NewSaveableHandleObject(InSaveable, this);
 	RegisterSaveableObject(SaveableHandle);
 	return SaveableHandle;
 }
 
-void UMySaveSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
+void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaveSystem::RegisterSaveableObject..."));
+	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::RegisterSaveableObject..."));
 	check(InSaveableHandle);
 	UE_LOG(MyLog, Log, TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is ")));
 
@@ -31,12 +31,12 @@ void UMySaveSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHand
 		UE_LOG(MyLog, Warning, TEXT("Skipping saveable object registration: IsPendingKill set on handle or object!"));
 	}
 
-	UE_LOG(MyLog, Log, TEXT("UMySaveSystem::RegisterSaveableObject DONE"));
+	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::RegisterSaveableObject DONE"));
 }
 
-void UMySaveSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
+void UMySaveLoadSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaveSystem::NotifyObjectDestructed..."));
+	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::NotifyObjectDestructed..."));
 
 	if(InSaveableHandle->SaveLoad_IsEnabled())
 	{
@@ -51,5 +51,5 @@ void UMySaveSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHand
 		UE_LOG(MyLog, Log, TEXT("Object: SaveLoad is NOT enabled - skipping accounting"));
 	}
 
-	UE_LOG(MyLog, Log, TEXT("UMySaveSystem::NotifyObjectDestructed DONE"));
+	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::NotifyObjectDestructed DONE"));
 }

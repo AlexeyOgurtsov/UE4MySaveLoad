@@ -1,6 +1,6 @@
 #include "MyLoaderBase.h"
 #include "MySaveLoadState.h"
-#include "../Sys/IMySaveSystemInternal.h"
+#include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 #include "SaveGameSystem/IMySaveable.h"
 #include "SaveGameSystem/MySaveableUtils.h"
@@ -15,7 +15,7 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMyLoaderBase::SetupLoaderBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
+void UMyLoaderBase::SetupLoaderBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase..."));
 

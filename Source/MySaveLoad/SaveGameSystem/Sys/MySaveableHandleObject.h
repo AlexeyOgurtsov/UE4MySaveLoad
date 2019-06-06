@@ -13,7 +13,7 @@
 class UPerObjectSaveLoadDataBase;
 class UMySaverLoaderBase;
 
-class IMySaveSystem;
+class IMySaveLoadSystem;
 class IMySaveable;
 
 UCLASS()
@@ -26,10 +26,10 @@ class UMySaveableHandleObject :
 public:
 	UMySaveableHandleObject();
 
-	static UMySaveableHandleObject* NewSaveableHandleObject(TScriptInterface<IMySaveable> InSaveable, IMySaveSystem* InSys);
+	static UMySaveableHandleObject* NewSaveableHandleObject(TScriptInterface<IMySaveable> InSaveable, IMySaveLoadSystem* InSys);
 
 	// ~Helper getters Begin
-	IMySaveSystem* GetSys() const;
+	IMySaveLoadSystem* GetSys() const;
 	// ~Helper getters End
 
 	// ~Link to owner Begin
@@ -67,7 +67,7 @@ private:
 	UPROPERTY()
 	TScriptInterface<IMySaveable> Saveable = nullptr;
 
-	IMySaveSystem* Sys = nullptr;
+	IMySaveLoadSystem* Sys = nullptr;
 
 	UPROPERTY()
 	FMySaveablePerClassProps ClassProps;

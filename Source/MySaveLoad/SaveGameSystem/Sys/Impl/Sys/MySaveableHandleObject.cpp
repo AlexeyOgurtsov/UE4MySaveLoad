@@ -1,7 +1,7 @@
 #include "../../MySaveableHandleObject.h"
 #include "SaveGameSystem/IMySaveable.h"
 #include "SaveGameSystem/MySaveableUtils.h"
-#include "SaveGameSystem/IMySaveSystem.h"
+#include "SaveGameSystem/IMySaveLoadSystem.h"
 #include "SaveGameSystem/Util/MySaveArchive.h"
 
 #include "Util/Core/LogUtilLib.h"
@@ -15,7 +15,7 @@ UMySaveableHandleObject::UMySaveableHandleObject()
 	InitPrefixString();
 }
 
-UMySaveableHandleObject* UMySaveableHandleObject::NewSaveableHandleObject(TScriptInterface<IMySaveable> const InSaveable, IMySaveSystem* const InSys)
+UMySaveableHandleObject* UMySaveableHandleObject::NewSaveableHandleObject(TScriptInterface<IMySaveable> const InSaveable, IMySaveLoadSystem* const InSys)
 {
 	check(InSaveable);
 	check(InSys);
@@ -36,7 +36,7 @@ void UMySaveableHandleObject::InitPrefixString()
 	PrefixString = Saveable->SaveLoad_GetPrefixString(FString(TEXT("UMySaveableHandleObject")));
 }
 
-IMySaveSystem* UMySaveableHandleObject::GetSys() const
+IMySaveLoadSystem* UMySaveableHandleObject::GetSys() const
 {
 	return Sys;
 }

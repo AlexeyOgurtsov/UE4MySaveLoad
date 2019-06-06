@@ -4,18 +4,18 @@
 * Interface for doing internal calls from the save system itself.
 */
 
-#include "SaveGameSystem/IMySaveSystem.h"
-#include "IMySaveSystemInternal.generated.h"
+#include "SaveGameSystem/IMySaveLoadSystem.h"
+#include "IMySaveLoadSystemInternal.generated.h"
 
 class IMySaveable;
 
 UINTERFACE()
-class UMySaveSystemInternal : public UMySaveSystem
+class UMySaveLoadSystemInternal : public UMySaveLoadSystem
 {
 	GENERATED_BODY()
 };
 
-class IMySaveSystemInternal : public IMySaveSystem
+class IMySaveLoadSystemInternal : public IMySaveLoadSystem
 {
 	GENERATED_BODY()
 

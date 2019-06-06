@@ -22,7 +22,7 @@ class UMySaverBase :  public UMySaverLoaderBase
 public:
 	void SetupSaverBase
 	(
-		IMySaveSystemInternal* InSys, 
+		IMySaveLoadSystemInternal* InSys, 
 		FArchive* InArchive, UWorld* InWorld, 
 		UMySaveLoadState* InCommState
 	);
