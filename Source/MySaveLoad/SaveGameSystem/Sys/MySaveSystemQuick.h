@@ -15,17 +15,20 @@ class UMySaveSystemQuick :
 	GENERATED_BODY()
 
 public:
-	/**
-	* To be called for each destroyed IMySaveable object.
-	*/
+	// ~IMySaveSystem Begin
 	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InObject) override;
+	// ~IMySaveSystem End
 
-	/**
-	* Gets names of all destructed objects.
-	*/
-	virtual TArray<FName> GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
+	// ~IMySaveSystemInternal Begin
+	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const override { return SaveableObjects; }
+	virtual void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable) override;
+	virtual const TArray<FName>& GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
+	// ~IMySaveSystemInternal End
 
 private:
+	UPROPERTY()
+	TArray<TScriptInterface<IMySaveable>> SaveableObjects;
+
 	UPROPERTY()
 	TArray<FName> StaticDestructedObjects;
 };

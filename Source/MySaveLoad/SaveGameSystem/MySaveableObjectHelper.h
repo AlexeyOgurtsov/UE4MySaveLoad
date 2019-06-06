@@ -11,13 +11,15 @@
 
 class IMySaveSystem;
 
-USTRUCT()
-struct FMySaveableObjectHelper
+UCLASS()
+class UMySaveableObjectHelper : public UObject
 {
 	GENERATED_BODY()
 
-	FMySaveableObjectHelper();
-	FMySaveableObjectHelper(TScriptInterface<IMySaveable> const InSaveableObject, IMySaveSystem* const InSys);
+public:
+	UMySaveableObjectHelper();
+
+	static UMySaveableObjectHelper* NewSaveableHelper(TScriptInterface<IMySaveable> InSaveableObject, IMySaveSystem* InSys);
 
 	// ~Helper getters Begin
 	IMySaveSystem* GetSys() const;

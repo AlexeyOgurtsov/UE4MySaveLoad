@@ -1,3 +1,19 @@
+TODO Today:
+0. Saveable utils:
+0.1 LogSaveable
+1. Saveable object accounting in the subsystem;
+1.1. Registration function in the saveable object helper
+1.1.1. LogSaveableObject
+1.2.
+
+2. saveable object helper
+2.0. Think of making it accessible to blueprint (as IMySaveable is available to BP)
+2.1. Make it createable by save system;
+2.2. Make Notify-of-BeginPlay-like function:
+2.2.1. Check that world is game world (PIE, game) 
+
+
+-----------
 TODO
 1. Global library (service) for working with SaveSystem entirely
 

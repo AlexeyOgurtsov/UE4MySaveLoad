@@ -10,23 +10,28 @@
 
 // @TODO 2: How properties to be setup in editor?
 
-FMySaveableObjectHelper::FMySaveableObjectHelper()
+UMySaveableObjectHelper::UMySaveableObjectHelper()
 {
 	InitPrefixString();
 }
 
-FMySaveableObjectHelper::FMySaveableObjectHelper(TScriptInterface<IMySaveable> const InSaveableObject, IMySaveSystem* const InSys)
+UMySaveableObjectHelper* UMySaveableObjectHelper::NewSaveableHelper(TScriptInterface<IMySaveable> InSaveableObject, IMySaveSystem* InSys)
 {
 	check(InSaveableObject);
 	check(InSys);
 
-	SaveableObject = InSaveableObject;
-	Sys = InSys;
+	UMySaveableObjectHelper* Obj = NewObject<UMySaveableObjectHelper>(Cast<UObject>(InSys), UMySaveableObjectHelper::StaticClass());
+	checkf(Obj, TEXT("NewObject must succeed!"));
 
-	InitPrefixString();
+	Obj->SaveableObject = InSaveableObject;
+	Obj->Sys = InSys;
+
+	Obj->InitPrefixString();
+
+	return Obj;
 }
 
-void FMySaveableObjectHelper::InitPrefixString()
+void UMySaveableObjectHelper::InitPrefixString()
 {
 	TArray<FStringFormatArg> FormatArgs;
 	FormatArgs.Add(SaveableObject.GetObject()->GetName()); 
@@ -35,18 +40,18 @@ void FMySaveableObjectHelper::InitPrefixString()
 	PrefixString = FString::Format(TEXT("FMySaveableObjectHelper for object \"{0}\" with UniqueName \"{1}\" of class \"{2}\":"), FormatArgs);
 }
 
-IMySaveSystem* FMySaveableObjectHelper::GetSys() const
+IMySaveSystem* UMySaveableObjectHelper::GetSys() const
 {
 	return Sys;
 }
 
-void FMySaveableObjectHelper::AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
+void UMySaveableObjectHelper::AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
 {		
 	UE_LOG(MyLog, Log, TEXT("%s AssignData"), *PrefixString);
 	Data = InData;
 }
 
-void FMySaveableObjectHelper::Notify_BeginDestroy()
+void UMySaveableObjectHelper::Notify_BeginDestroy()
 {
 	UE_LOG(MyLog, Log, TEXT("%s Notify_BeginDestroy is called"), *PrefixString);
 	// WARNING!!! Here we must notify about ANY object destruction (NOT only for NON-created dynamically),
@@ -54,13 +59,13 @@ void FMySaveableObjectHelper::Notify_BeginDestroy()
 	Sys->NotifyObjectDestructed(GetSaveableObject());
 }
 
-void FMySaveableObjectHelper::Default_Serialize(FArchive& Ar)
+void UMySaveableObjectHelper::Default_Serialize(FArchive& Ar)
 {
 	UE_LOG(MyLog, Log, TEXT("%s Default_Serialize is called"), *PrefixString);
 	UMySaveableUtils::SerializeObjectData(Ar, GetSaveableObject().GetObject());
 }
 
-void FMySaveableObjectHelper::Default_AllObjectsLoaded(FArchive& Ar)
+void UMySaveableObjectHelper::Default_AllObjectsLoaded(FArchive& Ar)
 {
 	// Nothing is to do here yet
 }

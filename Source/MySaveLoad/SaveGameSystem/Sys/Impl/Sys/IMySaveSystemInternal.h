@@ -7,6 +7,8 @@
 #include "SaveGameSystem/IMySaveSystem.h"
 #include "IMySaveSystemInternal.generated.h"
 
+class IMySaveable;
+
 UINTERFACE()
 class UMySaveSystemInternal : public UMySaveSystem
 {
@@ -19,7 +21,17 @@ class IMySaveSystemInternal : public IMySaveSystem
 
 public:
 	/**
-	* Gets names of all destructed objects.
+	* Get all registered saveable objects.
 	*/
-	virtual TArray<FName> GetStaticDestructedObjects() const = 0;
+	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const = 0;
+
+	/**
+	* Register new saveable object
+	*/
+	virtual void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable) = 0;
+
+	/**
+	* Gets names of all static destructed objects.
+	*/
+	virtual const TArray<FName>& GetStaticDestructedObjects() const = 0;
 };
