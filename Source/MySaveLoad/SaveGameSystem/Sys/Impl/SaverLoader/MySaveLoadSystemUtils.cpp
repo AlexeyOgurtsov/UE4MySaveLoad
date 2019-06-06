@@ -3,6 +3,7 @@
 #include "PerObjectSaveLoadData.h"
 
 #include "SaveGameSystem/IMySaveable.h"
+#include "SaveGameSystem/IMySaveableHandle.h"
 #include "SaveGameSystem/MySaveableUtils.h"
 
 #include "SaveGameSystem/Util/MySaveArchive.h"
@@ -127,8 +128,8 @@ void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const I
 {
 	check(InSavedObj);
 	check(InObj);
-	auto ObjData = Cast<UPerObjectSaveLoadData>(InObj->SaveLoad_GetData(InSender));
-	checkf(ObjData, TEXT("Obj data for object \"%s\" with unique name \"%s\" of class \"%s\" must be of class \"PerObjectSaveLoadData\""), *InObj.GetObject()->GetName(), *InObj->GetUniqueName(), *InObj.GetObject()->GetClass()->GetName());
+	auto ObjData = Cast<UPerObjectSaveLoadData>(InObj->SaveLoad_GetHandle()->SaveLoad_GetData(InSender));
+	checkf(ObjData, TEXT("Obj data for object %s must be of class \"%s\""), *InObj->SaveLoad_ToString(), *UPerObjectSaveLoadData::StaticClass()->GetName());
 	InSavedObj->ClassIndex = ObjData->ClassIndex;
 	InSavedObj->UniqueName = InObj->GetUniqueName();
 }

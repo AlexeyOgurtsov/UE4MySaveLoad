@@ -2,6 +2,7 @@
 #include "MySaveLoadState.h"
 #include "MySaveLoadSystemUtils.h"
 #include "SaveGameSystem/IMySaveable.h"
+#include "SaveGameSystem/IMySaveableHandle.h"
 #include "SaveGameSystem/MySaveableUtils.h"
 #include "PerObjectSaveLoadData.h"
 #include "../Sys/IMySaveSystemInternal.h"
@@ -217,7 +218,7 @@ void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySa
 		int32 ClassIndex;
 		bool bClassFound = GetCommState()->Classes.Find(Obj.GetObject()->GetClass(), /*Out*/ClassIndex);
 		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\" must be registered in the class table"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
-		UPerObjectSaveLoadDataBase* ObjDataBase = Obj->SaveLoad_GetData(this);
+		UPerObjectSaveLoadDataBase* const ObjDataBase = Obj->SaveLoad_GetHandle()->SaveLoad_GetData(this);
 		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\": Saveable data object must be assigned!"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
 		auto ObjData = CastChecked<UPerObjectSaveLoadData>(ObjDataBase);
 		ObjData->ClassIndex = ClassIndex;

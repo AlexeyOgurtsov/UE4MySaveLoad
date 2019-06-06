@@ -3,6 +3,7 @@
 #include "PerObjectSaveLoadData.h"
 
 #include "SaveGameSystem/IMySaveable.h"
+#include "SaveGameSystem/IMySaveableHandle.h"
 #include "../Sys/IMySaveSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 
@@ -75,7 +76,7 @@ void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> const In
 {
 	check(InObj);
 	auto Data = NewObject<UPerObjectSaveLoadDataBase>(GetPerObjectDataClass());
-	InObj->SaveLoad_AssignData(this, Data);
+	InObj->SaveLoad_GetHandle()->SaveLoad_AssignData(this, Data);
 }
 
 bool UMySaverLoaderBase::IsGlobalObject(UObject* const InObject) const

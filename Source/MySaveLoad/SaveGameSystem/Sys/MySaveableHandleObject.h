@@ -40,12 +40,17 @@ public:
 	void Notify_BeginDestroy();
 	// ~Object notification methods End
 
+	// ~SaveLoad data Begin
+	/**
+	* Assign data (to be called from loader only!).
+	*/
+	virtual void SaveLoad_AssignData(UMySaverLoaderBase* InSender, UPerObjectSaveLoadDataBase* Data) override;
+	virtual UPerObjectSaveLoadDataBase* SaveLoad_GetData(UMySaverLoaderBase* InSender) const override { return Data; }
+	// ~SaveLoad data End
+
 	// ~IMySaveable mirrored methods Begin
 	const FMySaveablePerClassProps& GetClassProps() const { return ClassProps; }
 	const FMySaveableStaticProps& GetStaticProps() const { return StaticProps; }
-
-	void AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const Data);
-	UPerObjectSaveLoadDataBase* GetData(UMySaverLoaderBase* const InSender) const { return Data; }
 	// ~IMySaveable mirrored methods End
 
 	// ~IMySaveable default Begin

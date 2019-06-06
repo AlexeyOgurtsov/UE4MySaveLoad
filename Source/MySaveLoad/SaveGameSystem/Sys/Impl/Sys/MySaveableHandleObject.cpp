@@ -41,7 +41,7 @@ IMySaveSystem* UMySaveableHandleObject::GetSys() const
 	return Sys;
 }
 
-void UMySaveableHandleObject::AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
+void UMySaveableHandleObject::SaveLoad_AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
 {		
 	UE_LOG(MyLog, Log, TEXT("%s AssignData"), *PrefixString);
 	Data = InData;

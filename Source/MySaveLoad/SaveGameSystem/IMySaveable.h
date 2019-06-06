@@ -3,8 +3,6 @@
 #include "MySaveableTypes.h"
 #include "IMySaveable.generated.h"
 
-class UPerObjectSaveLoadDataBase;
-class UMySaverLoaderBase;
 class IMySaveableHandle;
 
 class FArchive;
@@ -47,18 +45,6 @@ public:
 	* Per-Class props
 	*/
 	virtual const FMySaveablePerClassProps& SaveLoad_GetClassProps() const = 0;
-
-	// ~SaveLoad data Begin
-	/**
-	* Assign data (to be called from loader only!).
-	*/
-	virtual void SaveLoad_AssignData(UMySaverLoaderBase* InSender, UPerObjectSaveLoadDataBase* Data) = 0;
-
-	/**
-	* Gets assigned loader data (to be called from loader only!).
-	*/
-	virtual UPerObjectSaveLoadDataBase* SaveLoad_GetData(UMySaverLoaderBase* InSender) const = 0;
-	// ~SaveLoad data End
 
 	virtual const FMySaveableStaticProps& SaveLoad_GetStaticProps() const = 0;
 	virtual void SaveLoad_Serialize(FArchive& Ar) = 0;
