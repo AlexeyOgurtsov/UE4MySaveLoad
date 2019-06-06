@@ -16,16 +16,18 @@ class UMySaveSystemQuick :
 
 public:
 	// ~IMySaveSystem Begin
+	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InObject) override;
 	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InObject) override;
 	// ~IMySaveSystem End
 
 	// ~IMySaveSystemInternal Begin
 	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const override { return SaveableObjects; }
-	virtual void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable) override;
 	virtual const TArray<FName>& GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
 	// ~IMySaveSystemInternal End
 
 private:
+	void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable);
+
 	UPROPERTY()
 	TArray<TScriptInterface<IMySaveable>> SaveableObjects;
 

@@ -6,6 +6,7 @@
 #include "IMySaveSystem.generated.h"
 
 class IMySaveable;
+class IMySaveableHandle;
 
 UINTERFACE()
 class UMySaveSystem : public UInterface
@@ -19,7 +20,8 @@ class IMySaveSystem
 	GENERATED_BODY()
 
 public:
-	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InObject) = 0;
+	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InSaveable) = 0;
+	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveable> InSaveable) = 0;
 };
 
 

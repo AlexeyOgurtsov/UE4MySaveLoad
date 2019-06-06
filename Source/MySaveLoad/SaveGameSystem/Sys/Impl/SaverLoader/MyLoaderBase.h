@@ -21,7 +21,7 @@ public:
 	(
 		IMySaveSystemInternal* InSys, 
 		FArchive* InArchive, UWorld* InWorld, 
-		UMySaveLoadState* InCommState
+		UMySaveLoadState* InState
 	);
 
 	/**
@@ -41,8 +41,6 @@ protected:
 	* Destroy extra objects if they were marked as destroyed in the saved world.
 	*/
 	void DestroyExtraObjects();
-
-	void CheckObjectBeforeDestruct(TScriptInterface<IMySaveable> Obj);
 
 	/**
 	* Creates object into the object with the same name.

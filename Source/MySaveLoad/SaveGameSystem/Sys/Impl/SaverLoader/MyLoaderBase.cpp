@@ -15,11 +15,11 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMyLoaderBase::SetupLoaderBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
+void UMyLoaderBase::SetupLoaderBase(IMySaveSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase..."));
 
-	SetupSaverLoaderBase(ESaverOrLoader::Loader, InSys, InArchive, InWorld, InCommState);
+	SetupSaverLoaderBase(ESaverOrLoader::Loader, InSys, InArchive, InWorld, InState);
 
 	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase DONE"));
 }
@@ -150,8 +150,6 @@ void UMyLoaderBase::DestroyExtraObjects()
 
 			UE_LOG(MyLog, Log, TEXT("%sDestroying object..."), *PrefixString);
 
-			CheckObjectBeforeDestruct(Obj);
-
 			// Chance for object to do some work before destruction		
 			Obj->SaveLoad_BeforeDestroy();
 
@@ -160,15 +158,6 @@ void UMyLoaderBase::DestroyExtraObjects()
 		}
 	}
 	UE_LOG(MyLog, Log, TEXT("Destrong extra objects DONE"));
-}
-
-void UMyLoaderBase::CheckObjectBeforeDestruct(TScriptInterface<IMySaveable> const Obj)
-{
-	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(Obj.GetObject()->GetName());
-	FormatArgs.Add(Obj->GetUniqueName());
-	FormatArgs.Add(Obj.GetObject()->GetClass()->GetName());
-	FString const PrefixString = FString::Format(TEXT("For object named \"{0}\" with UniqueName \"{1}\" of class \"{2}\": "), FormatArgs);
 }
 
 TScriptInterface<IMySaveable> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)

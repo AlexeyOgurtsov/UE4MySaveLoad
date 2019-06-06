@@ -26,11 +26,6 @@ public:
 	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const = 0;
 
 	/**
-	* Register new saveable object
-	*/
-	virtual void RegisterSaveableObject(TScriptInterface<IMySaveable> InSaveable) = 0;
-
-	/**
 	* Gets names of all static destructed objects.
 	*/
 	virtual const TArray<FName>& GetStaticDestructedObjects() const = 0;

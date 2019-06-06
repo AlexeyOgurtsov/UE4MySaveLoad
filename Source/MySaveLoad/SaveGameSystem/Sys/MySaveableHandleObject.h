@@ -3,30 +3,37 @@
 /**
 * Calls from the IMySaveable interface to be redirected to this object typically.
 *
-* WARNING!!! Should NOT implement the IMySaveable, however (because in that case it will be enumerated by the system)!
+* @warning: Does NOT implement the IMySaveable, however (because in that case it will be enumerated by the system)!
 */
 
-#include "IMySaveable.h"
-#include "MySaveableObjectHelper.generated.h"
+#include "SaveGameSystem/IMySaveableHandle.h"
+#include "SaveGameSystem/MySaveableTypes.h"
+#include "MySaveableHandleObject.generated.h"
+
+class UPerObjectSaveLoadDataBase;
+class UMySaverLoaderBase;
 
 class IMySaveSystem;
+class IMySaveable;
 
 UCLASS()
-class UMySaveableObjectHelper : public UObject
+class UMySaveableHandleObject : 
+	public UObject
+,	public IMySaveableHandle
 {
 	GENERATED_BODY()
 
 public:
-	UMySaveableObjectHelper();
+	UMySaveableHandleObject();
 
-	static UMySaveableObjectHelper* NewSaveableHelper(TScriptInterface<IMySaveable> InSaveableObject, IMySaveSystem* InSys);
+	static UMySaveableHandleObject* NewSaveableHandleObject(TScriptInterface<IMySaveable> InSaveable, IMySaveSystem* InSys);
 
 	// ~Helper getters Begin
 	IMySaveSystem* GetSys() const;
 	// ~Helper getters End
 
 	// ~Link to owner Begin
-	TScriptInterface<IMySaveable> GetSaveableObject() const { return SaveableObject; }
+	TScriptInterface<IMySaveable> GetSaveableObject() const { return Saveable; }
 	// ~Link to owner End
 
 	// ~Object notification methods Begin
@@ -53,7 +60,7 @@ private:
 	FString PrefixString;
 
 	UPROPERTY()
-	TScriptInterface<IMySaveable> SaveableObject = nullptr;
+	TScriptInterface<IMySaveable> Saveable = nullptr;
 
 	IMySaveSystem* Sys = nullptr;
 
