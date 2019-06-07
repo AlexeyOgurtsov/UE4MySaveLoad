@@ -23,8 +23,8 @@ bg=blue</panel_attributes>
     </coordinates>
     <panel_attributes>IMySaveLoadSystem
 --
-+ CreateSaveableHandle(InSaveable)
-+ NotifyObjectDestructed(InSaveableHandle)</panel_attributes>
+/+ CreateSaveableHandle(InSaveable)/
+/+ NotifyObjectDestructed(InSaveableHandle)/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -33,11 +33,10 @@ bg=blue</panel_attributes>
       <x>56</x>
       <y>112</y>
       <w>256</w>
-      <h>112</h>
+      <h>96</h>
     </coordinates>
     <panel_attributes>IMySaveable
 --
-/+ FString SaveLoad_ToString() &lt;&lt;const&gt;&gt;/
 /+ SaveLoad_Serialize(Ar : &amp;FArchive)/
 /+ SaveLoad_BeforeDestroy()/
 /+ SaveLoad_AllObjectsLoaded(Ar : &amp;FArchive)/</panel_attributes>
@@ -49,15 +48,16 @@ bg=blue</panel_attributes>
       <x>320</x>
       <y>144</y>
       <w>336</w>
-      <h>120</h>
+      <h>136</h>
     </coordinates>
     <panel_attributes>IMySaveableHandle
 --
-+ SaveLoad_AssignData(Data : *UPerObjectSaveLoadDataBase)
-+ SaveLoad_GetData()
-+ SaveLoad_GetSaveable() &lt;&lt;const&gt;&gt;
-+ SaveLoad_GetClassProps() &lt;&lt;const&gt;&gt;
-+ SaveLoad_GetStaticProps() &lt;&lt;const&gt;&gt;</panel_attributes>
+/+ SaveLoad_AssignData(Data : *UPerObjectSaveLoadDataBase)/
+/+ SaveLoad_GetData()/SaveLoad_AssignData()/
+/+ SaveLoad_GetSaveable() &lt;&lt;const&gt;&gt;/
+/+ SaveLoad_ToString() &lt;&lt;const&gt;&gt;/
+/+ SaveLoad_GetClassProps() &lt;&lt;const&gt;&gt;/
+/+ SaveLoad_GetStaticProps() &lt;&lt;const&gt;&gt;/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

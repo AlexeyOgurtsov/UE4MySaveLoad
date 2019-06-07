@@ -45,13 +45,13 @@ public:
 
 	virtual TScriptInterface<IMySaveableHandle> SaveLoad_GetHandle() const = 0;
 	
-	virtual void SaveLoad_Serialize(FArchive& Ar) = 0;
+	virtual void SaveLoad_Serialize(FArchive& Ar);
 
 	/**
 	* Called when object is going to be destroyed because it was marked as destroyed here.
 	* Typically implementing code here should manage links to the object here.
 	*/
-	virtual void SaveLoad_BeforeDestroy() = 0;
+	virtual void SaveLoad_BeforeDestroy();
 
 	/**
 	* Called for all objects after all objects loaded,
@@ -59,5 +59,5 @@ public:
 	*
 	* Typically here links between objects ared to be fixed;
 	*/
-	virtual void SaveLoad_AllObjectsLoaded(FArchive& Ar) = 0;
+	virtual void SaveLoad_AllObjectsLoaded(FArchive& Ar);
 };

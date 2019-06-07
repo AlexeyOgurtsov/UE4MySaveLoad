@@ -53,11 +53,6 @@ public:
 	virtual UPerObjectSaveLoadDataBase* SaveLoad_GetData(UMySaverLoaderBase* InSender) const override { return Data; }
 	// ~SaveLoad data End
 
-	// ~IMySaveable default Begin
-	void Default_Serialize(FArchive& Ar);
-	void Default_AllObjectsLoaded(FArchive& Ar);
-	// ~IMySaveable default End
-
 private:
 	void InitPrefixString();
 

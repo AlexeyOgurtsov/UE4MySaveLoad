@@ -54,14 +54,3 @@ void UMySaveableHandleObject::Notify_BeginDestroy()
 	// the subsystem must determine by itself, whether it should do anything with this object	
 	Sys->NotifyObjectDestructed(this);
 }
-
-void UMySaveableHandleObject::Default_Serialize(FArchive& Ar)
-{
-	UE_LOG(MyLog, Log, TEXT("%s Default_Serialize is called"), *PrefixString);
-	UMySaveableUtils::SerializeObjectData(Ar, GetSaveableObject().GetObject());
-}
-
-void UMySaveableHandleObject::Default_AllObjectsLoaded(FArchive& Ar)
-{
-	// Nothing is to do here yet
-}

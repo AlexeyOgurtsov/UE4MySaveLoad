@@ -4,12 +4,28 @@
 
 #include "Util/Core/LogUtilLib.h"
 
-void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* InObj)
+void UMySaveableUtils::Default_Serialize(TScriptInterface<IMySaveable> const InSaveable, FArchive& Ar)
+{
+	UE_LOG(MyLog, Log, TEXT("%s Default_Serialize is called"), *InSaveable->SaveLoad_ToString());
+	SerializeObjectData(Ar, InSaveable.GetObject());
+}
+
+void UMySaveableUtils::Default_AllObjectsLoaded(TScriptInterface<IMySaveable> const InSaveable, FArchive& Ar)
+{
+	// Nothing is to do here yet
+}
+
+void UMySaveableUtils::Default_BeforeDestroy(TScriptInterface<IMySaveable> const InSaveable)
+{
+	// Nothing is to do here yet
+}
+
+void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* const InObj)
 {
 	InObj->Serialize(Ar);
 }
 
-bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InSaveable, bool bInLogged)
+bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> const InSaveable, bool const bInLogged)
 {
 	if(false == InSaveable->SaveLoad_GetUniqueFName().IsNone())
 	{
@@ -28,7 +44,7 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> InSaveable,
 	return true;
 }
 
-bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> InSaveable, bool bInLogged)
+bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> const InSaveable, const bool bInLogged)
 {
 	// When SaveLoad is disabled, any combination of flags is valid
 	if( false == InSaveable->SaveLoad_IsEnabled() )

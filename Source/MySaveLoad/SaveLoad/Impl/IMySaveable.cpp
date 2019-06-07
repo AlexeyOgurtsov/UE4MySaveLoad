@@ -1,6 +1,22 @@
 #include "SaveLoad/IMySaveable.h"
 #include "SaveLoad/IMySaveableHandle.h"
+#include "SaveLoad/MySaveableUtils.h"
 #include "Util/Core/LogUtilLib.h"
+
+void IMySaveable::SaveLoad_Serialize(FArchive& Ar)
+{
+	return UMySaveableUtils::Default_Serialize(Cast<UObject>(this), Ar);
+}
+
+void IMySaveable::SaveLoad_BeforeDestroy()
+{
+	return UMySaveableUtils::Default_BeforeDestroy(Cast<UObject>(this));
+}
+
+void IMySaveable::SaveLoad_AllObjectsLoaded(FArchive& Ar)
+{
+	return UMySaveableUtils::Default_AllObjectsLoaded(Cast<UObject>(this), Ar);
+}
 
 FString IMySaveable::SaveLoad_ToString() const
 {
