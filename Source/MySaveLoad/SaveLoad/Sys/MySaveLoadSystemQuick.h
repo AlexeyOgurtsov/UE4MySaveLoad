@@ -4,7 +4,7 @@
 * Quick implementation of the Save system.
 */
 
-#include "SaveGameSystem/Sys/Impl/Sys/IMySaveLoadSystemInternal.h"
+#include "SaveLoad/Sys/Impl/Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemQuick.generated.h"
 
 class IMySaveableHandle;

@@ -4,7 +4,7 @@
 * Handle that each saveable object instance uses to interact with the save-load system.
 */
 
-#include "SaveGameSystem/MySaveableTypes.h"
+#include "SaveLoad/MySaveableTypes.h"
 #include "IMySaveableHandle.generated.h"
 
 class IMySaveable;

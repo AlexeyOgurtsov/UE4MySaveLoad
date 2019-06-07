@@ -1,5 +1,5 @@
-#include "SaveGameSystem/Sys/MySaveLoadSystemQuick.h"
-#include "SaveGameSystem/IMySaveable.h"
+#include "SaveLoad/Sys/MySaveLoadSystemQuick.h"
+#include "SaveLoad/IMySaveable.h"
 #include "../../MySaveableHandleObject.h"
 
 #include "Util/Core/LogUtilLib.h"

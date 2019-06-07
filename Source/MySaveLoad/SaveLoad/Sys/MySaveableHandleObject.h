@@ -6,8 +6,8 @@
 * @warning: Does NOT implement the IMySaveable, however (because in that case it will be enumerated by the system)!
 */
 
-#include "SaveGameSystem/IMySaveableHandle.h"
-#include "SaveGameSystem/MySaveableTypes.h"
+#include "SaveLoad/IMySaveableHandle.h"
+#include "SaveLoad/MySaveableTypes.h"
 #include "MySaveableHandleObject.generated.h"
 
 class UPerObjectSaveLoadDataBase;

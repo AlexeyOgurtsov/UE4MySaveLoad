@@ -2,11 +2,11 @@
 #include "MySaveLoadState.h"
 #include "PerObjectSaveLoadData.h"
 
-#include "SaveGameSystem/IMySaveable.h"
-#include "SaveGameSystem/IMySaveableHandle.h"
-#include "SaveGameSystem/MySaveableUtils.h"
+#include "SaveLoad/IMySaveable.h"
+#include "SaveLoad/IMySaveableHandle.h"
+#include "SaveLoad/MySaveableUtils.h"
 
-#include "SaveGameSystem/Util/MySaveArchive.h"
+#include "SaveLoad/Util/MySaveArchive.h"
 #include "Util/Core/LogUtilLib.h"
 
 #include "Serialization/MemoryWriter.h"

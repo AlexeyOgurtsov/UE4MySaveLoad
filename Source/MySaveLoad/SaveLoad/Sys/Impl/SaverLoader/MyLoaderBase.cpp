@@ -2,8 +2,8 @@
 #include "MySaveLoadState.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
-#include "SaveGameSystem/IMySaveable.h"
-#include "SaveGameSystem/MySaveableUtils.h"
+#include "SaveLoad/IMySaveable.h"
+#include "SaveLoad/MySaveableUtils.h"
 
 #include "Util/Core/LogUtilLib.h"
 

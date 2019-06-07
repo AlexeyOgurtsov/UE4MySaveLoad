@@ -2,8 +2,8 @@
 #include "MySaveLoadState.h"
 #include "PerObjectSaveLoadData.h"
 
-#include "SaveGameSystem/IMySaveable.h"
-#include "SaveGameSystem/IMySaveableHandle.h"
+#include "SaveLoad/IMySaveable.h"
+#include "SaveLoad/IMySaveableHandle.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 

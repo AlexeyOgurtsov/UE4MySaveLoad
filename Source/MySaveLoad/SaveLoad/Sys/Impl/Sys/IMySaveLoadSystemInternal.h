@@ -4,7 +4,7 @@
 * Interface for doing internal calls from the save system itself.
 */
 
-#include "SaveGameSystem/IMySaveLoadSystem.h"
+#include "SaveLoad/IMySaveLoadSystem.h"
 #include "IMySaveLoadSystemInternal.generated.h"
 
 class IMySaveable;
