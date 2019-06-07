@@ -4,7 +4,7 @@
 * Data assigned for each object saveable during load.
 */
 
-#include "SaveLoad/PerObjectSaveLoadDataBase.h"
+#include "SaveLoad/Base/PerObjectSaveLoadDataBase.h"
 #include "PerObjectSaveLoadData.generated.h"
 
 UCLASS()
