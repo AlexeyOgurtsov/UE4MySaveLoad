@@ -22,7 +22,7 @@ public:
 	FString SaveLoad_GetUniqueName() const;
 	const FName& SaveLoad_GetUniqueFName() const;
 
-	bool SaveLoad_IsEnabled() const;
+	bool SaveLoad_IsEnabled() const;	
 	bool SaveLoad_IsGlobal() const;
 	bool SaveLoad_IsDynamic() const;
 	bool SaveLoad_IsStatic() const;

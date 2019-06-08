@@ -10,6 +10,8 @@ namespace
 {
 	bool ShouldRegisterSaveable(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 	{
+		checkNoRecursion();
+
 		FString const PrefixString = InSaveableHandle->SaveLoad_GetPrefixString(TEXT("Skipping registration for"));
 		if(false == InSaveableHandle->SaveLoad_IsEnabled())
 		{
@@ -17,12 +19,13 @@ namespace
 			return false;
 		}
 
-		const IMySaveable* const Saveable = InSaveableHandle->SaveLoad_GetSaveable().GetInterface();
-		checkf(Saveable, TEXT("%s Saveable object assigned to handle should never be nullptr"), *PrefixString);
+		const IMySaveable* const Saveable = Cast<IMySaveable>(InSaveableHandle->SaveLoad_GetSaveable().GetObject());
+		UObject* const SaveableObject = InSaveableHandle->SaveLoad_GetSaveable().GetObject();
+		UE_LOG(MyLog, Warning, TEXT("%s Saveable object assigned to handle should never be nullptr"), *PrefixString);
 
-		if(UWorld* World = InSavebleHandle->GetWorld())
+		if(const UWorld* const World = InSaveableHandle.GetObject()->GetWorld())
 		{
-			warnf(World, TEXT("%s GetWorld() returned nullptr - maybe you forgot to implement GetWorld() (it's NOT implemented for UObject by default)"), *PrefixString);
+			UE_LOG(MyLog, Log, TEXT("%s GetWorld() returned nullptr - maybe you forgot to implement GetWorld() (it's NOT implemented for UObject by default)"), *PrefixString);
 			if(false == World->IsGameWorld())	
 			{
 				UE_LOG(MyLog, Log, TEXT("%s Object's assigned world (returned by GetWorld()) is NOT game world"), *PrefixString);
@@ -32,7 +35,7 @@ namespace
 
 		bool const HandlePendingKill = InSaveableHandle.GetObject()->IsPendingKill();
 		checkf(false == HandlePendingKill, TEXT("%s Saveable object handle is marked with IsPendingKill(), and it's now treated like fatal error!"), *PrefixString);
-		bool const SaveablePendingKill = Saveable.GetObject()->IsPendingKill();
+		bool const SaveablePendingKill = SaveableObject->IsPendingKill();
 		checkf(false == SaveablePendingKill, TEXT("%s Saveable object is marked with IsPendingKill(), and it's now treated like fatal error!"), *PrefixString);	
 
 		return true;
@@ -41,6 +44,8 @@ namespace
 
 TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
 {
+	checkNoRecursion();
+
 	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
 	RegisterSaveableObject(SaveableHandle);
 	return SaveableHandle;
@@ -48,6 +53,8 @@ TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle
 
 void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
+	checkNoRecursion();
+
 	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::RegisterSaveableObject..."));
 	check(InSaveableHandle);
 	UE_LOG(MyLog, Log, TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is")));
@@ -63,6 +70,8 @@ void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveable
 
 void UMySaveLoadSystemQuick::UnregisterSaveableObjectChecked(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
+	checkNoRecursion();
+
 	check(InSaveableHandle);
 	int32 bFoundAndRemoved = (1 == SaveableHandles.RemoveSingleSwap(InSaveableHandle));
 	checkf(bFoundAndRemoved, TEXT("The given saveable handle must be registered"));
@@ -70,6 +79,8 @@ void UMySaveLoadSystemQuick::UnregisterSaveableObjectChecked(TScriptInterface<IM
 
 void UMySaveLoadSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
+	checkNoRecursion();
+
 	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::NotifyObjectDestructed..."));
 
 	if(InSaveableHandle->SaveLoad_IsEnabled())
