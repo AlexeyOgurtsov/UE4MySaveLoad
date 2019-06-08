@@ -1,0 +1,9 @@
+Saveable object handle management
+In IMySaveLoadSystem store and return saveable handles instead of saveable objects.
+
+@TODO0: Replace all calls from GetSaveableObjects() to CreateSaveableHandleIterator()
+@TODO4: Remove IMySaveable fwd and GetSaveableObjects() from IMySaveLoadSystemInternal
+
+- How to pass handles: TScriptInterface<...> or simple ptr?
+
+

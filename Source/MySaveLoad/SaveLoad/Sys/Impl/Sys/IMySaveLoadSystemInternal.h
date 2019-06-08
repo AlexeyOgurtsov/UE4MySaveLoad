@@ -8,6 +8,7 @@
 #include "IMySaveLoadSystemInternal.generated.h"
 
 class IMySaveable;
+class IMySaveableHandle;
 
 UINTERFACE()
 class UMySaveLoadSystemInternal : public UMySaveLoadSystem
@@ -23,10 +24,23 @@ public:
 	/**
 	* Get all registered saveable objects.
 	*/
+	UFUNCTION(Meta = (DeprecatedFunction, DeprecationMessage = "Use CreateSaveableHandleIterator() instead"))
 	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const = 0;
 
 	/**
-	* Gets names of all static destructed objects.
+	* Returns iterator that iterates all registered saveable object handles.
+	* Iterates only objects with SaveLoad enabled.
+	* @warning: Never delete saveable handles (and so, saveable objects) while iterating (as array is used)!
+	*/
+	virtual TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator CreateSaveableHandleIterator() const =0;
+
+	/**
+	* Returns count of all registered saveable objects.
+	*/
+	virtual int32 NumSaveables() const = 0;
+
+	/**
+	* Gets unique names of all static destructed objects.
 	*/
 	virtual const TArray<FName>& GetStaticDestructedObjects() const = 0;
 };

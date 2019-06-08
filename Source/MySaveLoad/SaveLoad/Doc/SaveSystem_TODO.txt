@@ -3,22 +3,8 @@ TODO Today:
 2.1. Sender: must be public available type, not UMySaverLoaderBase, which is quick saveload subsystem implemetation specific.
 3. IsSaveLoad() - should it be checked when registering saveload objects in the system?
 
-0. Saveable utils:
-0.1 LogSaveable
-1. Saveable object accounting in the subsystem;
-1.1. Registration function in the saveable object helper
-1.1.1. SaveLoad_ToString
-1.1.1.1. Refactor code fragment to use SaveLoad_ToString
-1.2. 
-
 2. saveable handle object
-2.0.0. USaveableHandleObject inherit IMySaveableHandle
-2.0.1. Expose USaveableHandleObject operations through IMySaveableHandle
-2.0.1.1. Should AssignData operations to be accessible thourgh IMySaveable, shouldn't be part of IMySaveableHandle?
-2.0.1.2. Should IMySaveableHandle provide access to Register function (it's to be registered automatically)
-2.0.1.3. 
-2.0.2. Separate IMySaveableHandle util functions (like serialization helpers) into a separate class
-2.0.3. 
+2.0.1. Expose USaveableHandleObject operations through IMySaveableHandle. 
 2.0. Think of making it accessible to blueprint (as IMySaveable is available to BP)
 2.1. Make it createable by save system;
 2.2. Make Notify-of-BeginPlay-like function:
