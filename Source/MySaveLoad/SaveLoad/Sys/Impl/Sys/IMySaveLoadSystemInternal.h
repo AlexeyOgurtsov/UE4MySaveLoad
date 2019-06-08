@@ -22,12 +22,6 @@ class IMySaveLoadSystemInternal : public IMySaveLoadSystem
 
 public:
 	/**
-	* Get all registered saveable objects.
-	*/
-	UFUNCTION(Meta = (DeprecatedFunction, DeprecationMessage = "Use CreateSaveableHandleIterator() instead"))
-	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const = 0;
-
-	/**
 	* Returns iterator that iterates all registered saveable object handles.
 	* Iterates only objects with SaveLoad enabled.
 	* @warning: Never delete saveable handles (and so, saveable objects) while iterating (as array is used)!

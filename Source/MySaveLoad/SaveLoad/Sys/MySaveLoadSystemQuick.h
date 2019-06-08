@@ -23,7 +23,6 @@ public:
 	// ~IMySaveLoadSystem End
 
 	// ~IMySaveLoadSystemInternal Begin
-	virtual const TArray<TScriptInterface<IMySaveable>>& GetSaveableObjects() const override { return SaveableObjects_DEPRECATED; } // @TODO: Remove
 	virtual TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator CreateSaveableHandleIterator() const override { return SaveableHandles.CreateConstIterator(); }
 	virtual int32 NumSaveables() const override { return SaveableHandles.Num(); }
 	virtual const TArray<FName>& GetStaticDestructedObjects() const override { return StaticDestructedObjects; }
@@ -32,9 +31,6 @@ public:
 private:
 	void RegisterSaveableObject(TScriptInterface<IMySaveableHandle> InSaveable);
 	void UnregisterSaveableObjectChecked(TScriptInterface<IMySaveableHandle> InSaveable);
-
-	UPROPERTY(meta = (DeprecatedProperty, DeprecationMessage="SaveableHandles now stores handles"))
-	TArray<TScriptInterface<IMySaveable>> SaveableObjects_DEPRECATED; // @TODO: Remove
 
 	/**
 	* Contains only handles with SaveLoad enabled.
