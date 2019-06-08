@@ -4,6 +4,41 @@
 
 #include "Util/Core/LogUtilLib.h"
 
+#include "Engine/World.h"
+
+namespace 
+{
+	bool ShouldRegisterSaveable(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
+	{
+		FString const PrefixString = InSaveableHandle->SaveLoad_GetPrefixString(TEXT("Skipping registration for"));
+		if(false == InSaveableHandle->SaveLoad_IsEnabled())
+		{
+			UE_LOG(MyLog, Log, TEXT("%s SaveLoad is diabled"), *PrefixString);
+			return false;
+		}
+
+		const IMySaveable* const Saveable = InSaveableHandle->SaveLoad_GetSaveable().GetInterface();
+		checkf(Saveable, TEXT("%s Saveable object assigned to handle should never be nullptr"), *PrefixString);
+
+		if(UWorld* World = InSavebleHandle->GetWorld())
+		{
+			warnf(World, TEXT("%s GetWorld() returned nullptr - maybe you forgot to implement GetWorld() (it's NOT implemented for UObject by default)"), *PrefixString);
+			if(false == World->IsGameWorld())	
+			{
+				UE_LOG(MyLog, Log, TEXT("%s Object's assigned world (returned by GetWorld()) is NOT game world"), *PrefixString);
+				return false;
+			}
+		}	
+
+		bool const HandlePendingKill = InSaveableHandle.GetObject()->IsPendingKill();
+		checkf(false == HandlePendingKill, TEXT("%s Saveable object handle is marked with IsPendingKill(), and it's now treated like fatal error!"), *PrefixString);
+		bool const SaveablePendingKill = Saveable.GetObject()->IsPendingKill();
+		checkf(false == SaveablePendingKill, TEXT("%s Saveable object is marked with IsPendingKill(), and it's now treated like fatal error!"), *PrefixString);	
+
+		return true;
+	}
+} // anonymous
+
 TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
 {
 	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
@@ -15,23 +50,12 @@ void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveable
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::RegisterSaveableObject..."));
 	check(InSaveableHandle);
-	UE_LOG(MyLog, Log, TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is ")));
+	UE_LOG(MyLog, Log, TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is")));
 
-	if(InSaveableHandle->SaveLoad_IsEnabled())
+	if(ShouldRegisterSaveable(InSaveableHandle))
 	{
-		TScriptInterface<IMySaveable> const Saveable = InSaveableHandle->SaveLoad_GetSaveable();
-		bool const HandlePendingKill = InSaveableHandle.GetObject()->IsPendingKill();
-		checkf(false == HandlePendingKill, TEXT("Saveable object handle is marked with IsPendingKill(), and it's now treated like fatal error!"));
-		bool const SaveablePendingKill = Saveable.GetObject()->IsPendingKill();
-		checkf(false == SaveablePendingKill, TEXT("Saveable object is marked with IsPendingKill(), and it's now treated like fatal error!"));
-		if(false == HandlePendingKill && false == SaveablePendingKill)
-		{
-			bool const bAdded = SaveableHandles.AddUnique(InSaveableHandle);
-		}
-		else
-		{
-			UE_LOG(MyLog, Warning, TEXT("Skipping saveable object registration: IsPendingKill set on handle or object!"));
-		}
+		bool const bAdded = SaveableHandles.AddUnique(InSaveableHandle);
+		checkf(bAdded, TEXT("Each saveable handle must be registered only once!"));
 	}
 
 	UE_LOG(MyLog, Log, TEXT("UMySaveLoadSystem::RegisterSaveableObject DONE"));

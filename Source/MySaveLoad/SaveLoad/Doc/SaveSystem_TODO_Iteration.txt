@@ -2,6 +2,7 @@ Saveable object handle management
 
 @TODO0: Use saveable handle iteration instead of script interface iteration;
 @TODO1: Register only game worlds;
+@TODO: Check save load state
 
 - What about editor worlds?
 - Do we encounter objects from old worlds or from only one world?

@@ -111,11 +111,11 @@ void UMySaverBase::Find_WorldObjects()
 		{
 			if( false == IsGlobalObject(*Itr) )	
 			{
-				GetCommState()->WorldObjects.AddUnique(Itr->SaveLoad_GetSaveable());
+				GetCommState()->WorldObjects.AddUnique((*Itr)->SaveLoad_GetSaveable());
 			}
 			else
 			{
-				UE_LOG(MyLog, Log, TEXT("Global object \"%s\" found"), *Itr->SaveLoad_ToString());
+				UE_LOG(MyLog, Log, TEXT("Global object \"%s\" found"), *(*Itr)->SaveLoad_ToString());
 				NumGlobalObjectsInWorld++;
 			}
 		}		
