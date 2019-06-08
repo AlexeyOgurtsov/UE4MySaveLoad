@@ -105,17 +105,17 @@ void UMySaverBase::Find_WorldObjects()
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_WorldObjects..."));
 
 	int32 NumGlobalObjectsInWorld = 0;
-	for(TActorIterator<AActor> Itr{GetWorld()}; Itr; ++Itr)
+	for(TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator Itr = GetSys()->CreateSaveableHandleIterator(); Itr; ++Itr)
 	{
 		if(ShouldObjectBeSaved(*Itr, /*bLogged=*/true, /*bLogOnFalseOnly=*/true))
 		{
 			if( false == IsGlobalObject(*Itr) )	
 			{
-				GetCommState()->WorldObjects.AddUnique(TScriptInterface<IMySaveable>(*Itr));
+				GetCommState()->WorldObjects.AddUnique(Itr->SaveLoad_GetSaveable());
 			}
 			else
 			{
-				UE_LOG(MyLog, Log, TEXT("Global object named \"%s\" found in world"), *Itr->GetName());
+				UE_LOG(MyLog, Log, TEXT("Global object \"%s\" found"), *Itr->SaveLoad_ToString());
 				NumGlobalObjectsInWorld++;
 			}
 		}		

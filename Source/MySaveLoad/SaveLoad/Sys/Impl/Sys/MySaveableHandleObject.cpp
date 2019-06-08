@@ -15,12 +15,12 @@ UMySaveableHandleObject::UMySaveableHandleObject()
 	InitPrefixString();
 }
 
-UMySaveableHandleObject* UMySaveableHandleObject::NewSaveableHandleObject(TScriptInterface<IMySaveable> const InSaveable, IMySaveLoadSystem* const InSys)
+UMySaveableHandleObject* UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(TScriptInterface<IMySaveable> InSaveable, IMySaveLoadSystem* InSys)
 {
 	check(InSaveable);
 	check(InSys);
 
-	UMySaveableHandleObject* Obj = NewObject<UMySaveableHandleObject>(Cast<UObject>(InSys), UMySaveableHandleObject::StaticClass());
+	UMySaveableHandleObject* Obj = Cast<UObject>(InSys)->CreateDefaultSubobject<UMySaveableHandleObject>(TEXT("SaveableHandle"));
 	checkf(Obj, TEXT("NewObject must succeed!"));
 
 	Obj->Saveable = InSaveable;

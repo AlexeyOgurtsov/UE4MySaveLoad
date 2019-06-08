@@ -26,7 +26,10 @@ class UMySaveableHandleObject :
 public:
 	UMySaveableHandleObject();
 
-	static UMySaveableHandleObject* NewSaveableHandleObject(TScriptInterface<IMySaveable> InSaveable, IMySaveLoadSystem* InSys);
+	/**
+	* Creates saveable handle using the CreateDefaultSubobject, so must always be called in the constructor only.
+	*/
+	static UMySaveableHandleObject* CreateSaveableHandleDefaultSubobject(TScriptInterface<IMySaveable> InSaveable, IMySaveLoadSystem* InSys);
 
 	// ~Helper getters Begin
 	IMySaveLoadSystem* GetSys() const;

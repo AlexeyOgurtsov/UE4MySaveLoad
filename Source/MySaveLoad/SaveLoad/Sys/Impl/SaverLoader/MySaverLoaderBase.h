@@ -12,7 +12,8 @@ class UMySaveLoadState;
 class UMySaveState;
 class UPerObjectSaveLoadDataBase;
 
-class IMySaveable;
+class IMySaveable; // @TODO: Remove?
+class IMySaveableHandle;
 class IMySaveLoadSystemInternal;
 
 class FArchive;
@@ -52,12 +53,12 @@ public:
 	/**
 	* Checks whether the given object is global based on the state!
 	*/
-	bool IsGlobalObject(UObject* InObject) const;
+	bool IsGlobalObject(TScriptInterface<IMySaveableHandle> InSaveableHandle) const;
 
 	/**
 	* Checks whether the given object be saved at all!
 	*/
-	bool ShouldObjectBeSaved(UObject* InObj, bool bInLogged=false, bool bLogOnFalseOnly=false) const;
+	bool ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> InSaveableHandle, bool bInLogged=false, bool bLogOnFalseOnly=false) const;
 	// ~Helpers End
 
 protected:

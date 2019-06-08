@@ -1,9 +1,10 @@
 Saveable object handle management
-In IMySaveLoadSystem store and return saveable handles instead of saveable objects.
 
-@TODO0: Replace all calls from GetSaveableObjects() to CreateSaveableHandleIterator()
-@TODO4: Remove IMySaveable fwd and GetSaveableObjects() from IMySaveLoadSystemInternal
+@TODO0: Use saveable handle iteration instead of script interface iteration;
+@TODO1: Register only game worlds;
 
+- What about editor worlds?
+- Do we encounter objects from old worlds or from only one world?
 - How to pass handles: TScriptInterface<...> or simple ptr?
 
 

@@ -7,7 +7,6 @@
 #include "SaveLoad/IMySaveLoadSystem.h"
 #include "IMySaveLoadSystemInternal.generated.h"
 
-class IMySaveable;
 class IMySaveableHandle;
 
 UINTERFACE()

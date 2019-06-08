@@ -79,55 +79,42 @@ void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> const In
 	InObj->SaveLoad_GetHandle()->SaveLoad_AssignData(this, Data);
 }
 
-bool UMySaverLoaderBase::IsGlobalObject(UObject* const InObject) const
+bool UMySaverLoaderBase::IsGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle) const
 {
-	return CommState->GlobalObjects.Contains(TScriptInterface<IMySaveable>(InObject));
+	return CommState->GlobalObjects.Contains(InSaveableHandle->SaveLoad_GetSaveable());
 }
 
-bool UMySaverLoaderBase::ShouldObjectBeSaved(UObject* const InObj, bool const bInLogged, bool const bLogOnFalseOnly) const
+bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> const InSaveableHandle, bool const bInLogged, bool const bLogOnFalseOnly) const
 {
-	if(InObj == nullptr)
+	if(InSaveableHandle == nullptr)
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Warning, TEXT("Object is nullptr"));
+			UE_LOG(MyLog, Warning, TEXT("Saveable handle is nullptr"));
 		}
 		return false;
 	}
 
-	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(InObj->GetName());
-	FormatArgs.Add(InObj->GetClass()->GetName());
-	FString PrefixString = FString::Format(TEXT("Object \"%s\" of class \"%s\""), FormatArgs);
+	FString const PrefixString = InSaveableHandle->SaveLoad_GetPrefixString(TEXT("Object"));
 
-	if(IMySaveable* Sav = Cast<IMySaveable>(InObj))
+	if(bInLogged && (false == bLogOnFalseOnly) )
 	{
-		if(bInLogged && (false == bLogOnFalseOnly) )
-		{
-			UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *Sav->SaveLoad_GetUniqueName());
-		}
-
-		if(false == Sav->SaveLoad_IsEnabled())
-		{
-			if(bInLogged)
-			{
-				UE_LOG(MyLog, Log, TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
-			}
-	
-			return false;
-		}
-
-		if(bInLogged && (false == bLogOnFalseOnly) )
-		{
-			UE_LOG(MyLog, Log, TEXT("%s: object is to be saved"), *PrefixString);
-		}
+		UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
 	}
-	else
+
+	if(false == InSaveableHandle->SaveLoad_IsEnabled())
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Warning, TEXT("%s: object NOT instance of IMySaveable"), *PrefixString);
+			UE_LOG(MyLog, Log, TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
 		}
+	
+		return false;
+	}
+
+	if(bInLogged && (false == bLogOnFalseOnly) )
+	{
+		UE_LOG(MyLog, Log, TEXT("%s: object is to be saved"), *PrefixString);
 	}
 
 	return true;

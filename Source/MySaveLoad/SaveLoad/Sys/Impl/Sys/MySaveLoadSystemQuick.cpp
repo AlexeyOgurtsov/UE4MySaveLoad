@@ -6,7 +6,7 @@
 
 TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
 {
-	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::NewSaveableHandleObject(InSaveable, this);
+	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
 	RegisterSaveableObject(SaveableHandle);
 	return SaveableHandle;
 }
