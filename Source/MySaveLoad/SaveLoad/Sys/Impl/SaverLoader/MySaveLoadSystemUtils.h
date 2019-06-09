@@ -7,7 +7,7 @@
 #include "../Format/MySaveTypes.h"
 #include "MySaveLoadSystemUtils.generated.h"
 
-class IMySaveable;
+class IMySaveableHandle;
 class UMySaverLoaderBase;
 class UMySaveLoadState;
 class IMySaveable;
@@ -39,9 +39,9 @@ public:
 	/**
 	* Get saved struct from object WITHOUT its data (which are to be serialized later).
 	*/
-	static void PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj);
+	static void PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> InSaveableHandle);
 
-	static void PrepareObjectSaveData(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj);
+	static void PrepareObjectSaveData(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> InSaveableHandle);
 
 	static void PrepareClassSaveStruct(UMySaverLoaderBase* const InSender, FMySavedClass* const InSavedClass, UClass* const InClass);
 
@@ -49,5 +49,5 @@ public:
 
 	static void SaveLoadStateToSaveStruct(UMySaverLoaderBase* const InSender, FMySavedWorld* const InSavedWorld, const UMySaveLoadState* const InSaveLoadState);
 
-	static void PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedObject>* const InSavedObjects, const TArray<TScriptInterface<IMySaveable>>& InObjects);
+	static void PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedObject>* const InSavedObjects, const TArray<TScriptInterface<IMySaveableHandle>>& InObjects);
 };

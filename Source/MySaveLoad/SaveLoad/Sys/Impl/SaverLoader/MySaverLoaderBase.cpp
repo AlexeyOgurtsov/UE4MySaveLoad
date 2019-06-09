@@ -80,7 +80,7 @@ void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveableHandle> co
 
 bool UMySaverLoaderBase::IsGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle) const
 {
-	return State->GlobalObjects.Contains(InSaveableHandle->SaveLoad_GetSaveable());
+	return State->GlobalSaveableHandles.Contains(InSaveableHandle);
 }
 
 bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> const InSaveableHandle, bool const bInLogged, bool const bLogOnFalseOnly) const

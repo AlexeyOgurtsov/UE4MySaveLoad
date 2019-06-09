@@ -120,7 +120,7 @@ void UMySaverBase::Find_WorldObjects()
 			}
 		}		
 	}
-	UE_LOG(MyLog, Log, TEXT("%d saveable actors found, %d global objects in world"), GetState()->WorldObjects.Num(), NumGlobalObjectsInWorld);
+	UE_LOG(MyLog, Log, TEXT("%d saveable actors found, %d global objects in world"), GetState()->WorldSaveableHandles.Num(), NumGlobalObjectsInWorld);
 
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_WorldObjects DONE"));
 }
@@ -133,7 +133,7 @@ void UMySaverBase::Find_GlobalObjects()
 	Find_GlobalObject_GameMode();
 	Find_GlobalObject_GameInstance();
 
-	UE_LOG(MyLog, Log, TEXT("Total %d global objects registered"), GetState()->GlobalObjects.Num());
+	UE_LOG(MyLog, Log, TEXT("Total %d global objects registered"), GetState()->GlobalSaveableHandles.Num());
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_GlobalObjects DONE"));
 }
 

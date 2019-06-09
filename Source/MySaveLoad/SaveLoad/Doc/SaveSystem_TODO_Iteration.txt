@@ -1,8 +1,0 @@
-Saveable object handle management
-
-@TODO0: Use saveable handle iteration instead of script interface iteration;
-0.0. Assign objects NOT called at all!
-
-@TODO: Check save load state?
-
-

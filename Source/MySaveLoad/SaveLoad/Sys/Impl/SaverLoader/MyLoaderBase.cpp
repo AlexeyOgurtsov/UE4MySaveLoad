@@ -160,7 +160,7 @@ void UMyLoaderBase::DestroyExtraObjects()
 	UE_LOG(MyLog, Log, TEXT("Destrong extra objects DONE"));
 }
 
-TScriptInterface<IMySaveable> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)
+TScriptInterface<IMySaveableHandle> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)
 {
 	UE_LOG(MyLog, Error, TEXT("Not yet impl")); return nullptr;
 }

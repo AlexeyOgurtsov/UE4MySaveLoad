@@ -6,7 +6,6 @@
 
 #include "MySaveLoadState.generated.h"
 
-class IMySaveable; // @TODO: Remove
 class IMySaveableHandle;
 UWorld;
 
@@ -24,12 +23,6 @@ public:
 	*/
 	UPROPERTY()
 	TArray<UClass*> Classes;
-
-	UPROPERTY(Meta=(DeprecatedProperty, DeprecationMessage="Use GlobalSaveableHandles"))
-	TArray<TScriptInterface<IMySaveable>> GlobalObjects;
-
-	UPROPERTY(Meta=(DeprecatedProperty, DeprecationMessage="Use WorldSaveableHandles"))
-	TArray<TScriptInterface<IMySaveable>> WorldObjects;
 
 	UPROPERTY()
 	TArray<TScriptInterface<IMySaveableHandle>> GlobalSaveableHandles;

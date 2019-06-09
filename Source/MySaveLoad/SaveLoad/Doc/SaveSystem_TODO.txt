@@ -1,15 +1,6 @@
 TODO Today:
 2. IMySaveableHandle: GetSaveData/AssignSaveData:
 2.1. Sender: must be public available type, not UMySaverLoaderBase, which is quick saveload subsystem implemetation specific.
-3. IsSaveLoad() - should it be checked when registering saveload objects in the system?
-
-2. saveable handle object
-2.0.1. Expose USaveableHandleObject operations through IMySaveableHandle. 
-2.0. Think of making it accessible to blueprint (as IMySaveable is available to BP)
-2.1. Make it createable by save system;
-2.2. Make Notify-of-BeginPlay-like function:
-2.2.1. Check that world is game world (PIE, game) 
-
 
 -----------
 TODO
@@ -22,16 +13,6 @@ TODO
 *** Saveable object helper
 1. How to access SaveSystem
 2. Flags: some flags to be available within blueprint as per-object property (is SaveLoad at all).
-
-*** Save format:
-1. Identification by name: GetName() is not unique!
-GetPathName()?
-2. ISaveable: Unique name
-2.1. Provide helper accessor
-2.2. Provide default implementation
-2.3. Check that all names are UNIQUE!
-2.4. Use it instead of FName:
-2.4.1. Loader
 
 *** Save Load 
 1. Fail of load/save should not be fatal error!!!

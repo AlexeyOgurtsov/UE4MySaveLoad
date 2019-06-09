@@ -124,14 +124,14 @@ void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoad
 	UE_LOG(MyLog, Log, TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
 }
 
-void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj)
+void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
 	check(InSavedObj);
-	check(InObj);
-	auto ObjData = Cast<UPerObjectSaveLoadData>(InObj->SaveLoad_GetHandle()->SaveLoad_GetData(InSender));
-	checkf(ObjData, TEXT("Obj data for object %s must be of class \"%s\""), *InObj->SaveLoad_ToString(), *UPerObjectSaveLoadData::StaticClass()->GetName());
+	check(InSaveableHandle);
+	auto ObjData = Cast<UPerObjectSaveLoadData>(InSaveableHandle->SaveLoad_GetData(InSender));
+	checkf(ObjData, TEXT("Obj data for object %s must be of class \"%s\""), *InSaveableHandle->SaveLoad_ToString(), *UPerObjectSaveLoadData::StaticClass()->GetName());
 	InSavedObj->ClassIndex = ObjData->ClassIndex;
-	InSavedObj->UniqueName = InObj->SaveLoad_GetUniqueName();
+	InSavedObj->UniqueName = InSaveableHandle->SaveLoad_GetUniqueName();
 }
 
 void UMySaveLoadSystemUtils::PrepareClassSaveStruct(UMySaverLoaderBase* const InSender, FMySavedClass* const InSavedClass, UClass* const InClass)
@@ -151,8 +151,8 @@ void UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(UMySaverLoaderBase* const
 	PrepareWorldInfoSaveStruct(InSender, &InSavedWorld->WorldInfo, InSaveLoadState);
 
 	PrepareSaveClasses_FromLoadState(InSender, InSavedWorld, InSaveLoadState);
-	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->GlobalObjects, InSaveLoadState->GlobalObjects);
-	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->WorldObjects, InSaveLoadState->WorldObjects);
+	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->GlobalObjects, InSaveLoadState->GlobalSaveableHandles);
+	PrepareSaveObjects_FromLoadState(InSender, &InSavedWorld->WorldObjects, InSaveLoadState->WorldSaveableHandles);
 
 	PrepareDestructedObjects_FromLoadState(InSender, &InSavedWorld->StaticDestructedObjects, InSaveLoadState->StaticDestructedObjects);
 }
@@ -172,30 +172,30 @@ void UMySaveLoadSystemUtils::PrepareSaveClasses_FromLoadState(UMySaverLoaderBase
 	}
 }
 
-void UMySaveLoadSystemUtils::PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedObject>* const InSavedObjects, const TArray<TScriptInterface<IMySaveable>>& InObjects)
+void UMySaveLoadSystemUtils::PrepareSaveObjects_FromLoadState(UMySaverLoaderBase* const InSender, TArray<FMySavedObject>* const InSavedObjects, const TArray<TScriptInterface<IMySaveableHandle>>& InSaveableHandles)
 {
 	check(InSavedObjects);
 
-	InSavedObjects->Reserve(InObjects.Num());
-	for(int32 Index = 0; Index < InObjects.Num(); Index++)
+	InSavedObjects->Reserve(InSaveableHandles.Num());
+	for(int32 Index = 0; Index < InSaveableHandles.Num(); Index++)
 	{
 		FMySavedObject SavedObject;
-		TScriptInterface<IMySaveable> Obj = InObjects[Index];
+		TScriptInterface<IMySaveableHandle> SaveableHandle = InSaveableHandles[Index];
 
-		PrepareObjectSaveStruct(InSender, &SavedObject, Obj);
-		PrepareObjectSaveData(InSender, &SavedObject, Obj);
+		PrepareObjectSaveStruct(InSender, &SavedObject, SaveableHandle);
+		PrepareObjectSaveData(InSender, &SavedObject, SaveableHandle);
 
 		InSavedObjects->Add(SavedObject);
 	}
 }
 
-void UMySaveLoadSystemUtils::PrepareObjectSaveData(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveable> const InObj)
+void UMySaveLoadSystemUtils::PrepareObjectSaveData(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	check(InObj);
+	check(InSaveableHandle);
 	TArray<uint8>& SavedData = InSavedObj->Data;
 
 	FMemoryWriter MemoryWriter { SavedData, /*bPersistent=*/true };
 	FMySaveArchive Ar { MemoryWriter };
 	
-	InObj->SaveLoad_Serialize(Ar);
+	InSaveableHandle->SaveLoad_GetSaveable()->SaveLoad_Serialize(Ar);
 }

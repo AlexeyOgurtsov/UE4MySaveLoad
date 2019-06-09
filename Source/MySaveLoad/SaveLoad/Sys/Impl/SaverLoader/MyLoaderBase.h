@@ -10,6 +10,7 @@
 
 #include "MyLoaderBase.generated.h"
 
+class IMySaveableHandle;
 
 UCLASS()
 class UMyLoaderBase :  public UMySaverLoaderBase
@@ -48,5 +49,5 @@ protected:
 	*
 	* Warning: Never destroys objects (there's a separate function for that kind of stuff)
 	*/
-	TScriptInterface<IMySaveable> LoadSavedObject(const FMySavedObject* pSavedObject);
+	TScriptInterface<IMySaveableHandle> LoadSavedObject(const FMySavedObject* pSavedObject);
 };                                                    
