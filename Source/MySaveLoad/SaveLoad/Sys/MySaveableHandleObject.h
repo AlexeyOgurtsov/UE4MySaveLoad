@@ -31,6 +31,10 @@ public:
 	*/
 	static UMySaveableHandleObject* CreateSaveableHandleDefaultSubobject(TScriptInterface<IMySaveable> InSaveable, IMySaveLoadSystem* InSys);
 
+	// ~UObject system overloads Begin
+	virtual void BeginDestroy() override;
+	// ~UObject system overloads End
+
 	// ~Helper getters Begin
 	IMySaveLoadSystem* GetSys() const;
 	// ~Helper getters End
@@ -38,10 +42,6 @@ public:
 	// ~Link to owner Begin
 	TScriptInterface<IMySaveable> GetSaveableObject() const { return Saveable; }
 	// ~Link to owner End
-
-	// ~Object notification methods Begin
-	void Notify_BeginDestroy();
-	// ~Object notification methods End
 
 	virtual TScriptInterface<IMySaveable> SaveLoad_GetSaveable() const override { return Saveable; }
 

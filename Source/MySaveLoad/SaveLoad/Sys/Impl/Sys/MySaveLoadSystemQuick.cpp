@@ -61,7 +61,7 @@ void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveable
 
 	if(ShouldRegisterSaveable(InSaveableHandle))
 	{
-		bool const bAdded = SaveableHandles.AddUnique(InSaveableHandle);
+		bool const bAdded = (1 == SaveableHandles.AddUnique(InSaveableHandle));
 		checkf(bAdded, TEXT("Each saveable handle must be registered only once!"));
 	}
 
