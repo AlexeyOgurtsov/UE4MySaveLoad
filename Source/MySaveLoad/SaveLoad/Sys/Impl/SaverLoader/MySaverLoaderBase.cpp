@@ -2,7 +2,6 @@
 #include "MySaveLoadState.h"
 #include "PerObjectSaveLoadData.h"
 
-#include "SaveLoad/IMySaveable.h"
 #include "SaveLoad/IMySaveableHandle.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
@@ -61,22 +60,22 @@ void UMySaverLoaderBase::LogBinaryWorld()
 void UMySaverLoaderBase::AssignDataToAllObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects..."));
-	for(TScriptInterface<IMySaveable> O : GetState()->WorldObjects)
+	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->WorldSaveableHandles)
 	{
-		AssignObjectData(O);
+		AssignObjectData(SaveableHandle);
 	}
-	for(TScriptInterface<IMySaveable> O : GetState()->GlobalObjects)
+	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->GlobalSaveableHandles)
 	{
-		AssignObjectData(O);
+		AssignObjectData(SaveableHandle);
 	}
 	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects DONE"));
 }
 
-void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> const InObj)
+void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	check(InObj);
+	check(InSaveableHandle);
 	auto Data = NewObject<UPerObjectSaveLoadDataBase>(GetPerObjectDataClass());
-	InObj->SaveLoad_GetHandle()->SaveLoad_AssignData(this, Data);
+	InSaveableHandle->SaveLoad_AssignData(this, Data);
 }
 
 bool UMySaverLoaderBase::IsGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle) const

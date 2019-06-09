@@ -11,8 +11,7 @@
 #include "MySaverBase.generated.h"
 
 class UMySaveState;
-
-class IMySaveable;
+class IMySaveableHandle;
 
 UCLASS()
 class UMySaverBase :  public UMySaverLoaderBase
@@ -65,7 +64,8 @@ public:
 
 protected:
 	/**
-	* Typically called within Find_GlobalObjects;
+	* Typically called within Find_GlobalObjects.
+	* @param InObject - any object (supporting or non-supporing IMySaveable), maybe nullptr
 	*/
 	void RegisterGlobalObject_IfShouldBeSaved(UObject* InObject);
 
@@ -74,8 +74,8 @@ protected:
 	void Find_GlobalObject_GameInstance();
 
 private:
-	void RegisterGlobalObject(UObject* InObject);
-	void BindClassIndicesToObjects(const TArray<TScriptInterface<IMySaveable>>& InObjects);
+	void RegisterGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle);
+	void BindClassIndicesToObjects(const TArray<TScriptInterface<IMySaveableHandle>>& InSaveableHandles);
 
 	/**
 	* Entire state is converted into binary representation and saved to archive.

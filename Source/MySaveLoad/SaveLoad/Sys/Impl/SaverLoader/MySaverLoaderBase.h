@@ -12,7 +12,6 @@ class UMySaveLoadState;
 class UMySaveState;
 class UPerObjectSaveLoadDataBase;
 
-class IMySaveable; // @TODO: Remove?
 class IMySaveableHandle;
 class IMySaveLoadSystemInternal;
 
@@ -77,7 +76,7 @@ protected:
 	* Warning both world and global data objects already must be created in the state object!
 	*/
 	void AssignDataToAllObjects();
-	void AssignObjectData(TScriptInterface<IMySaveable> InObj);
+	void AssignObjectData(TScriptInterface<IMySaveableHandle> InSaveableHandle);
 
 private:
 	IMySaveLoadSystemInternal* Sys = nullptr;

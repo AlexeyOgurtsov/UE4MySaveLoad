@@ -111,7 +111,7 @@ void UMySaverBase::Find_WorldObjects()
 		{
 			if( false == IsGlobalObject(*Itr) )	
 			{
-				GetState()->WorldObjects.AddUnique((*Itr)->SaveLoad_GetSaveable());
+				GetState()->WorldSaveableHandles.AddUnique(*Itr);
 			}
 			else
 			{
@@ -176,15 +176,9 @@ void UMySaverBase::Find_GlobalObject_GameInstance()
 {
 	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_GameInstance..."));
 
-	UGameInstance* G = GetWorld()->GetGameInstance();
-	if(G == nullptr)
-	{
-		UE_LOG(MyLog, Log, TEXT("GetGameInstance() returned nullptr!"));
-	}
-	else
-	{
-		RegisterGlobalObject_IfShouldBeSaved(G);
-	}
+	UGameInstance* const G = GetWorld()->GetGameInstance();
+	RegisterGlobalObject_IfShouldBeSaved(G);
+
 	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_GameInstance DONE"));
 }
 
@@ -192,59 +186,75 @@ void UMySaverBase::Extract_ClassTable()
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable..."));
 	
-	for(TScriptInterface<IMySaveable> O : GetState()->GlobalObjects)
+	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->GlobalSaveableHandles)
 	{
-		GetState()->Classes.AddUnique(O.GetObject()->GetClass());
+		GetState()->Classes.AddUnique(SaveableHandle->SaveLoad_GetSaveable().GetObject()->GetClass());
 	}
 
-	for(TScriptInterface<IMySaveable> O : GetState()->WorldObjects)
+	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->WorldSaveableHandles)
 	{
-		GetState()->Classes.AddUnique(O.GetObject()->GetClass());
+		GetState()->Classes.AddUnique(SaveableHandle->SaveLoad_GetSaveable().GetObject()->GetClass());
 	}
 
 	UE_LOG(MyLog, Log, TEXT("Total %d classes extracted"), GetState()->Classes.Num());
 
-	BindClassIndicesToObjects(GetState()->GlobalObjects);
-	BindClassIndicesToObjects(GetState()->WorldObjects);
+	BindClassIndicesToObjects(GetState()->GlobalSaveableHandles);
+	BindClassIndicesToObjects(GetState()->WorldSaveableHandles);
 
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable DONE"));
 }
 
-void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySaveable>>& InObjects)
+void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySaveableHandle>>& InSaveableHandles)
 {
-	for(TScriptInterface<IMySaveable> Obj : InObjects)
+	for(TScriptInterface<IMySaveableHandle> SaveableHandle : InSaveableHandles)
 	{
-		check(Obj);
 		int32 ClassIndex;
-		bool bClassFound = GetState()->Classes.Find(Obj.GetObject()->GetClass(), /*Out*/ClassIndex);
-		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\" must be registered in the class table"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
-		UPerObjectSaveLoadDataBase* const ObjDataBase = Obj->SaveLoad_GetHandle()->SaveLoad_GetData(this);
-		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\": Saveable data object must be assigned!"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
+		UClass* TheClass = SaveableHandle->SaveLoad_GetSaveable().GetObject()->GetClass();
+		FString SaveableString = SaveableHandle->SaveLoad_ToString(); 
+
+		bool const bClassFound = GetState()->Classes.Find(TheClass, /*Out*/ClassIndex);
+		checkf(bClassFound, TEXT("Class for object \"%s\" must be registered in the class table"), *SaveableString);
+		UPerObjectSaveLoadDataBase* const ObjDataBase = SaveableHandle->SaveLoad_GetData(this);
+		checkf(bClassFound, TEXT("Class for object \"%s\": Saveable data object must be assigned!"), *SaveableString);
 		auto ObjData = CastChecked<UPerObjectSaveLoadData>(ObjDataBase);
 		ObjData->ClassIndex = ClassIndex;
 		
 	}
 }
 
-void UMySaverBase::RegisterGlobalObject(UObject* const InObject)
+void UMySaverBase::RegisterGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject..."));
-	check(InObject);
-	UE_LOG(MyLog, Log, TEXT("Object named \"%s\" of class \"%s\""), *InObject->GetName(), *InObject->GetClass()->GetName());
-	GetState()->GlobalObjects.AddUnique(TScriptInterface<IMySaveable>(InObject));
+	check(InSaveableHandle);
+	UE_LOG(MyLog, Log, TEXT("Object \"%s\""), *InSaveableHandle->SaveLoad_ToString());
+	bool const bAdded = (1 == GetState()->GlobalSaveableHandles.AddUnique(InSaveableHandle));
+	checkf(bAdded, TEXT("Saveable handle must be successfully added to the container"));
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject DONE"));
 }
 
 void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject_IfShouldBeSaved..."));
-	check(InObject);
-	UE_LOG(MyLog, Log, TEXT("Object named \"%s\" of class \"%s\""), *InObject->GetName(), *InObject->GetClass()->GetName());
 
-	if(ShouldObjectBeSaved(InObject, /*bLogged=*/true))
+	if(InObject == nullptr)
 	{
-		RegisterGlobalObject(InObject);
+		UE_LOG(MyLog, Log, TEXT("Skipping object registration - passed object is nullptr"));
+		return;
 	}
 
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject_IfShouldBeSaved DONE"));
+	if(IMySaveable* Saveable = Cast<IMySaveable>(InObject))
+	{
+		TScriptInterface<IMySaveableHandle> const SaveableHandle = Saveable->SaveLoad_GetHandle();
+		checkf(SaveableHandle, TEXT("SaveableHandle should never be nullptr"));
+		UE_LOG(MyLog, Log, TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
+
+		if(ShouldObjectBeSaved(SaveableHandle, /*bLogged=*/true))
+		{
+			RegisterGlobalObject(SaveableHandle);
+		}
+	}
+	else
+	{
+		checkf(false, TEXT("Skipping registration - saveable interface is not supported"));
+	}
 }
