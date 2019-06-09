@@ -63,8 +63,8 @@ void UMyLoaderBase::LoadWorld()
 {
 	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadWorld..."));
 
-	GetCommState()->MapName = GetBinaryWorld().WorldInfo.MapName;
-	UE_LOG(MyLog, Log, TEXT("Loaded map name: \"%s\""), *GetCommState()->MapName);
+	GetState()->MapName = GetBinaryWorld().WorldInfo.MapName;
+	UE_LOG(MyLog, Log, TEXT("Loaded map name: \"%s\""), *GetState()->MapName);
 
 	{
 		UE_LOG(MyLog, Log, TEXT("Checking map name"));
@@ -84,14 +84,14 @@ void UMyLoaderBase::LoadWorld()
 			UE_LOG(MyLog, Log, TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
 		}
 
-		if(MapName_NoStreamingPrefix == GetCommState()->MapName)
+		if(MapName_NoStreamingPrefix == GetState()->MapName)
 		{
 			UE_LOG(MyLog, Log, TEXT("MapName in the save file corresponds to current level's: skipping level load!"));
 		}
 		else
 		{
 			UE_LOG(MyLog, Log, TEXT("Loading level - MapName does NOT correspond the current level's"));	
-			UE_LOG(MyLog, Log, TEXT("Current map name is \"%s\" and map name in save file is \"%s\""), *MapName_NoStreamingPrefix, *GetCommState()->MapName);	
+			UE_LOG(MyLog, Log, TEXT("Current map name is \"%s\" and map name in save file is \"%s\""), *MapName_NoStreamingPrefix, *GetState()->MapName);	
 			checkf(false, TEXT("Not yet impl: here we must load the level"));
 		}
 
@@ -106,11 +106,11 @@ void UMyLoaderBase::LoadSavedClasses()
 	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadSavedClasses..."));
 
 	UE_LOG(MyLog, Log, TEXT("%d classes in the save file"), GetBinaryWorld().Classes.Num());
-	GetCommState()->Classes.SetNum(GetBinaryWorld().Classes.Num());
+	GetState()->Classes.SetNum(GetBinaryWorld().Classes.Num());
 	for(int32 Index = 0; Index < GetBinaryWorld().Classes.Num(); Index++)
 	{
 		const FMySavedClass* SavedClass = &GetBinaryWorld().Classes[Index];
-		LoadSavedClass(Index, &GetCommState()->Classes[Index], SavedClass);
+		LoadSavedClass(Index, &GetState()->Classes[Index], SavedClass);
 	}
 
 	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadSavedClasses DONE"));
@@ -133,10 +133,10 @@ void UMyLoaderBase::DestroyExtraObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("Destrong extra objects..."));
 	UE_LOG(MyLog, Log, TEXT("%d objects are marked as destroyed in the save file"), GetBinaryWorld().StaticDestructedObjects.Num());
-	GetCommState()->StaticDestructedObjects.Reserve(GetBinaryWorld().StaticDestructedObjects.Num());
+	GetState()->StaticDestructedObjects.Reserve(GetBinaryWorld().StaticDestructedObjects.Num());
 	for(const FMySavedDestruct& SavedObjectToDestruct: GetBinaryWorld().StaticDestructedObjects)
 	{
-		GetCommState()->StaticDestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
+		GetState()->StaticDestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
 
 		// @TODO: Find object by name
 		UE_LOG(MyLog, Error, TEXT("not yet impl")); TScriptInterface<IMySaveable> Obj = nullptr;

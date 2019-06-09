@@ -18,7 +18,7 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 	ESaverOrLoader const InSaverOrLoader, 
 	IMySaveLoadSystemInternal* const InSys,
 	FArchive* const InArchive, UWorld* const InWorld,
-	UMySaveLoadState* const InCommState
+	UMySaveLoadState* const InState
 )
 {
 	UE_LOG(MyLog, Log, TEXT("SetupSaverLoaderBase..."));
@@ -27,13 +27,13 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 	check(InArchive);
 	check(InWorld);
 	checkf(InWorld->IsGameWorld(), TEXT("UMySaverLoaderBase: world MUST be Game World!"));
-	check(InCommState);
+	check(InState);
 
 	SaverOrLoader = InSaverOrLoader;
 	Sys = InSys;
 	Ar = InArchive;
 	World = InWorld;
-	CommState = InCommState;
+	State = InState;
 
 	PerObjectDataClass = UPerObjectSaveLoadData::StaticClass();
 
@@ -61,11 +61,11 @@ void UMySaverLoaderBase::LogBinaryWorld()
 void UMySaverLoaderBase::AssignDataToAllObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects..."));
-	for(TScriptInterface<IMySaveable> O : GetCommState()->WorldObjects)
+	for(TScriptInterface<IMySaveable> O : GetState()->WorldObjects)
 	{
 		AssignObjectData(O);
 	}
-	for(TScriptInterface<IMySaveable> O : GetCommState()->GlobalObjects)
+	for(TScriptInterface<IMySaveable> O : GetState()->GlobalObjects)
 	{
 		AssignObjectData(O);
 	}
@@ -81,7 +81,7 @@ void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveable> const In
 
 bool UMySaverLoaderBase::IsGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle) const
 {
-	return CommState->GlobalObjects.Contains(InSaveableHandle->SaveLoad_GetSaveable());
+	return State->GlobalObjects.Contains(InSaveableHandle->SaveLoad_GetSaveable());
 }
 
 bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> const InSaveableHandle, bool const bInLogged, bool const bLogOnFalseOnly) const

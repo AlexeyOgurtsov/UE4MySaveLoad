@@ -24,7 +24,7 @@ public:
 	(
 		IMySaveLoadSystemInternal* InSys, 
 		FArchive* InArchive, UWorld* InWorld, 
-		UMySaveLoadState* InCommState
+		UMySaveLoadState* InState
 	);
 
 	/**

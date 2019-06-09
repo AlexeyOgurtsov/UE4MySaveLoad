@@ -37,7 +37,7 @@ public:
 		ESaverOrLoader InSaverOrLoader,
 		IMySaveLoadSystemInternal* InSys,
 		FArchive* InArchive, UWorld* InWorld,
-		UMySaveLoadState* InCommState
+		UMySaveLoadState* InState
 	);
 
 	IMySaveLoadSystemInternal* GetSys() const { return Sys; }
@@ -46,7 +46,7 @@ public:
 	virtual UWorld* GetWorld() const override { return World; }
 	FMySavedWorld& GetBinaryWorld() { return BinaryWorld; }
 	const FMySavedWorld& GetBinaryWorld() const { return BinaryWorld; }
-	UMySaveLoadState* GetCommState() const { return CommState; }
+	UMySaveLoadState* GetState() const { return State; }
 	TSubclassOf<UPerObjectSaveLoadDataBase> GetPerObjectDataClass() const { return PerObjectDataClass; }
 
 	// ~Helpers Begin
@@ -96,7 +96,7 @@ private:
 	// ~Per-class Props End
 
 	UPROPERTY()
-	UMySaveLoadState* CommState = nullptr;
+	UMySaveLoadState* State = nullptr;
 
 	UPROPERTY()
 	FMySavedWorld BinaryWorld;

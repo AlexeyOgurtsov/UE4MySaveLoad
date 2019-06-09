@@ -17,11 +17,11 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 
-void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InCommState)
+void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
 	UE_LOG(MyLog, Log, TEXT("SetupSaverBase..."));
 
-	SetupSaverLoaderBase(ESaverOrLoader::Saver, InSys, InArchive, InWorld, InCommState);
+	SetupSaverLoaderBase(ESaverOrLoader::Saver, InSys, InArchive, InWorld, InState);
 
 	UE_LOG(MyLog, Log, TEXT("SetupSaverBase DONE"));
 }
@@ -69,7 +69,7 @@ void UMySaverBase::Extract_WorldInfo()
 			MapName_NoStreamingPrefix = MapName;
 			MapName_NoStreamingPrefix.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
-			GetCommState()->MapName = MapName_NoStreamingPrefix;
+			GetState()->MapName = MapName_NoStreamingPrefix;
 
 			UE_LOG(MyLog, Log, TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
 		}
@@ -83,9 +83,9 @@ void UMySaverBase::Extract_WorldInfo()
 void UMySaverBase::Extract_DestructedObjects()
 {
 	UE_LOG(MyLog, Log, TEXT("Extracing info about destructed objects..."));
-	GetCommState()->StaticDestructedObjects = GetSys()->GetStaticDestructedObjects();
-	UE_LOG(MyLog, Log, TEXT("%d destructed objects found"), GetCommState()->StaticDestructedObjects.Num());
-	for(const FName& DestructObjectName : GetCommState()->StaticDestructedObjects)
+	GetState()->StaticDestructedObjects = GetSys()->GetStaticDestructedObjects();
+	UE_LOG(MyLog, Log, TEXT("%d destructed objects found"), GetState()->StaticDestructedObjects.Num());
+	for(const FName& DestructObjectName : GetState()->StaticDestructedObjects)
 	{
 		UE_LOG(MyLog, Log, TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
 	}
@@ -95,7 +95,7 @@ void UMySaverBase::Extract_DestructedObjects()
 void UMySaverBase::BinarizeToArchive()
 {
 	UE_LOG(MyLog, Log, TEXT("Binarizing to archive..."));
-	UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(this, &GetBinaryWorld(), GetCommState());
+	UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(this, &GetBinaryWorld(), GetState());
 	SerializeToFromArchive();
 	UE_LOG(MyLog, Log, TEXT("Binarizing to archive DONE"));
 }
@@ -111,7 +111,7 @@ void UMySaverBase::Find_WorldObjects()
 		{
 			if( false == IsGlobalObject(*Itr) )	
 			{
-				GetCommState()->WorldObjects.AddUnique((*Itr)->SaveLoad_GetSaveable());
+				GetState()->WorldObjects.AddUnique((*Itr)->SaveLoad_GetSaveable());
 			}
 			else
 			{
@@ -120,7 +120,7 @@ void UMySaverBase::Find_WorldObjects()
 			}
 		}		
 	}
-	UE_LOG(MyLog, Log, TEXT("%d saveable actors found, %d global objects in world"), GetCommState()->WorldObjects.Num(), NumGlobalObjectsInWorld);
+	UE_LOG(MyLog, Log, TEXT("%d saveable actors found, %d global objects in world"), GetState()->WorldObjects.Num(), NumGlobalObjectsInWorld);
 
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_WorldObjects DONE"));
 }
@@ -133,7 +133,7 @@ void UMySaverBase::Find_GlobalObjects()
 	Find_GlobalObject_GameMode();
 	Find_GlobalObject_GameInstance();
 
-	UE_LOG(MyLog, Log, TEXT("Total %d global objects registered"), GetCommState()->GlobalObjects.Num());
+	UE_LOG(MyLog, Log, TEXT("Total %d global objects registered"), GetState()->GlobalObjects.Num());
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_GlobalObjects DONE"));
 }
 
@@ -192,20 +192,20 @@ void UMySaverBase::Extract_ClassTable()
 {
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable..."));
 	
-	for(TScriptInterface<IMySaveable> O : GetCommState()->GlobalObjects)
+	for(TScriptInterface<IMySaveable> O : GetState()->GlobalObjects)
 	{
-		GetCommState()->Classes.AddUnique(O.GetObject()->GetClass());
+		GetState()->Classes.AddUnique(O.GetObject()->GetClass());
 	}
 
-	for(TScriptInterface<IMySaveable> O : GetCommState()->WorldObjects)
+	for(TScriptInterface<IMySaveable> O : GetState()->WorldObjects)
 	{
-		GetCommState()->Classes.AddUnique(O.GetObject()->GetClass());
+		GetState()->Classes.AddUnique(O.GetObject()->GetClass());
 	}
 
-	UE_LOG(MyLog, Log, TEXT("Total %d classes extracted"), GetCommState()->Classes.Num());
+	UE_LOG(MyLog, Log, TEXT("Total %d classes extracted"), GetState()->Classes.Num());
 
-	BindClassIndicesToObjects(GetCommState()->GlobalObjects);
-	BindClassIndicesToObjects(GetCommState()->WorldObjects);
+	BindClassIndicesToObjects(GetState()->GlobalObjects);
+	BindClassIndicesToObjects(GetState()->WorldObjects);
 
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable DONE"));
 }
@@ -216,7 +216,7 @@ void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySa
 	{
 		check(Obj);
 		int32 ClassIndex;
-		bool bClassFound = GetCommState()->Classes.Find(Obj.GetObject()->GetClass(), /*Out*/ClassIndex);
+		bool bClassFound = GetState()->Classes.Find(Obj.GetObject()->GetClass(), /*Out*/ClassIndex);
 		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\" must be registered in the class table"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
 		UPerObjectSaveLoadDataBase* const ObjDataBase = Obj->SaveLoad_GetHandle()->SaveLoad_GetData(this);
 		checkf(bClassFound, TEXT("Class for object \"%s\" of class \"%s\": Saveable data object must be assigned!"), *Obj.GetObject()->GetName(), *Obj.GetObject()->GetClass()->GetName());
@@ -231,7 +231,7 @@ void UMySaverBase::RegisterGlobalObject(UObject* const InObject)
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject..."));
 	check(InObject);
 	UE_LOG(MyLog, Log, TEXT("Object named \"%s\" of class \"%s\""), *InObject->GetName(), *InObject->GetClass()->GetName());
-	GetCommState()->GlobalObjects.AddUnique(TScriptInterface<IMySaveable>(InObject));
+	GetState()->GlobalObjects.AddUnique(TScriptInterface<IMySaveable>(InObject));
 	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject DONE"));
 }
 
