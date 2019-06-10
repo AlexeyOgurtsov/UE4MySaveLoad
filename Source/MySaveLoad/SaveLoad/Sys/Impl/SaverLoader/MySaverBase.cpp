@@ -102,7 +102,7 @@ void UMySaverBase::Find_WorldObjects()
 	int32 NumGlobalObjectsInWorld = 0;
 	for(TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator Itr = GetSys()->CreateSaveableHandleIterator(); Itr; ++Itr)
 	{
-		if(ShouldObjectBeSaved(*Itr, /*bLogged=*/true, /*bLogOnFalseOnly=*/true))
+		if(ShouldObjectBeSaved(*Itr, ELogFlags::None))
 		{
 			if( false == IsGlobalObject(*Itr) )	
 			{
@@ -235,7 +235,7 @@ void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 		checkf(SaveableHandle, TEXT("SaveableHandle should never be nullptr"));
 		SL_LOG(TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
 
-		if(ShouldObjectBeSaved(SaveableHandle, /*bLogged=*/true))
+		if(ShouldObjectBeSaved(SaveableHandle, ELogFlags::None))
 		{
 			RegisterGlobalObject(SaveableHandle);
 		}

@@ -31,7 +31,7 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> const InSav
 	{
 		if(bInLogged)
 		{
-			SL_LOG_ERROR(TEXT("%s: UniqueName must always be set for saveable object"), *InSaveable->SaveLoad_GetPrefixString());
+			SL_LOG_ERROR(TEXT("%s: UniqueName must always be set for saveable object"), *InSaveable->SaveLoad_ToString());
 		}
 		return false;
 	}
@@ -56,7 +56,7 @@ bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> const
 	{
 		if(bInLogged)
 		{
-			SL_LOG_ERROR(TEXT("%s: Global objects cannot be marked as dynamic"), *InSaveable->SaveLoad_GetPrefixString());
+			SL_LOG_ERROR(TEXT("%s: Global objects cannot be marked as dynamic"), *InSaveable->SaveLoad_ToString());
 		}
 		return false;
 	}

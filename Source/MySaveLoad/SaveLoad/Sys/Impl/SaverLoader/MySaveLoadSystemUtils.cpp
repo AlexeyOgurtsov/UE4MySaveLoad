@@ -35,10 +35,7 @@ bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* cons
 {
 	if(InMeta->Signature != FORMAT_SIGNATURE)
 	{		
-		if(bInLogged)
-		{
-			SL_LOG_ERROR(TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
-		}
+		SL_LOG_ERROR_IF(bInLogged, TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
 		return false;
 	}
 	return true;
@@ -67,19 +64,13 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 	// First of all check object's class index
 	if(InClassIndex < 0)
 	{
-		if(bInLogged)
-		{
-			SL_LOG_ERROR(TEXT("%sClass index is negative"), *LogPrefix);
-		}
+		SL_LOG_ERROR_IF(bInLogged, TEXT("%sClass index is negative"), *LogPrefix);
 		return false;
 	}
 
 	if(InClassIndex >= InWorld->Classes.Num())
 	{
-		if(bInLogged)
-		{
-			SL_LOG_ERROR(TEXT("%sClass index is greater than all classes"), *LogPrefix);
-		}
+		SL_LOG_ERROR_IF(bInLogged, TEXT("%sClass index is greater than all classes"), *LogPrefix);
 		return false;
 	}
 

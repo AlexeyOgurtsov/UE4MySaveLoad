@@ -5,6 +5,7 @@
 */
 
 #include "../Format/MySaveTypes.h"
+#include "Util/Core/Log/MyLoggingTypes.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaverLoaderBase.generated.h"
 
@@ -57,7 +58,7 @@ public:
 	/**
 	* Checks whether the given object be saved at all!
 	*/
-	bool ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> InSaveableHandle, bool bInLogged=false, bool bLogOnFalseOnly=false) const;
+	bool ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> InSaveableHandle, ELogFlags InLogFlags=ELogFlags::None) const;
 	// ~Helpers End
 
 protected:

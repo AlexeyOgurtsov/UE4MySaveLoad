@@ -78,38 +78,24 @@ bool UMySaverLoaderBase::IsGlobalObject(TScriptInterface<IMySaveableHandle> cons
 	return State->GlobalSaveableHandles.Contains(InSaveableHandle);
 }
 
-bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> const InSaveableHandle, bool const bInLogged, bool const bLogOnFalseOnly) const
+bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle> const InSaveableHandle, ELogFlags InLogFlags) const
 {
 	if(InSaveableHandle == nullptr)
 	{
-		if(bInLogged)
-		{
-			SL_LOG_WARN(TEXT("Saveable handle is nullptr"));
-		}
+		SL_LOG_WARN_IF_FLAGS(InLogFlags, TEXT("Saveable handle is nullptr"));
 		return false;
 	}
 
 	FString const PrefixString = InSaveableHandle->SaveLoad_GetPrefixString(TEXT("Object"));
 
-	if(bInLogged && (false == bLogOnFalseOnly) )
-	{
-		SL_LOG(TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
-	}
+	SL_LOG_IF_FLAGS(InLogFlags, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
 
 	if(false == InSaveableHandle->SaveLoad_IsEnabled())
 	{
-		if(bInLogged)
-		{
-			SL_LOG(TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
-		}
-	
+		SL_LOG_IF_FLAGS(InLogFlags, TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);	
 		return false;
 	}
-
-	if(bInLogged && (false == bLogOnFalseOnly) )
-	{
-		SL_LOG(TEXT("%s: object is to be saved"), *PrefixString);
-	}
+	SL_LOG_IF_FLAGS(InLogFlags, TEXT("%s: object is to be saved"), *PrefixString);
 
 	return true;
 }
