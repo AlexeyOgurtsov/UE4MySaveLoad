@@ -37,7 +37,7 @@ bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* cons
 	{		
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Error, TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
+			M_LOG_ERROR(TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
 		}
 		return false;
 	}
@@ -58,11 +58,6 @@ bool UMySaveLoadSystemUtils::IsSavedObjectValid(UMySaverLoaderBase* const InSend
 	}
 
 	const FString& ClassName = InWorld->Classes[ClassIndex].Name;
-	
-	TArray<FStringFormatArg> FormatArgs;
-	FormatArgs.Add(ObjectUniqueName);	
-	FormatArgs.Add(ClassName);
-	FString PrefixString = FString::Format(TEXT("Check of object with UniqueName \"{0}\" of class \"{1}\""), FormatArgs);
 
 	return true;
 }
@@ -74,7 +69,7 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Error, TEXT("%sClass index is negative"), *LogPrefix);
+			M_LOG_ERROR(TEXT("%sClass index is negative"), *LogPrefix);
 		}
 		return false;
 	}
@@ -83,7 +78,7 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Error, TEXT("%sClass index is greater than all classes"), *LogPrefix);
+			M_LOG_ERROR(TEXT("%sClass index is greater than all classes"), *LogPrefix);
 		}
 		return false;
 	}
@@ -93,18 +88,16 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 
 void UMySaveLoadSystemUtils::PrepareFormatMetaSaveStruct(UMySaverLoaderBase* InSender, FMySaveFormatMeta* const InSavedFormatMeta)
 {
-	UE_LOG(MyLog, Log, TEXT("Preparing save format meta..."));
+	M_LOG(TEXT("Preparing save format meta"));
 	InSavedFormatMeta->Signature = FORMAT_SIGNATURE;
 	UE_LOG(MyLog, Log, TEXT("Signature: \"%s\""), *InSavedFormatMeta->Signature);
-	UE_LOG(MyLog, Log, TEXT("Preparing save format meta DONE"));
 }
 
 void UMySaveLoadSystemUtils::PrepareWorldInfoSaveStruct(UMySaverLoaderBase* InSender, FMySavedWorldInfo* const InSavedWorldInfo, const UMySaveLoadState* const InSaveLoadState)
 {
-	UE_LOG(MyLog, Log, TEXT("Preparing world info save struct..."));
+	M_LOG(TEXT("Preparing world info save struct"));
 	InSavedWorldInfo->MapName = InSaveLoadState->MapName;
 	UE_LOG(MyLog, Log, TEXT("MapName: \"%s\""), *InSavedWorldInfo->MapName);
-	UE_LOG(MyLog, Log, TEXT("Preparing world info save struct DONE"));
 }
 
 void UMySaveLoadSystemUtils::PrepareObjectDestructStruct(UMySaverLoaderBase* const InSender, FMySavedDestruct* const InSavedDestruct, const FName& InUniqueName)
@@ -121,7 +114,7 @@ void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoad
 		PrepareObjectDestructStruct(InSender, &SavedDestruct, DestructedName);
 		InSavedDestructedObjects->Add(SavedDestruct);
 	}
-	UE_LOG(MyLog, Log, TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
+	M_LOG(TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
 }
 
 void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> const InSaveableHandle)

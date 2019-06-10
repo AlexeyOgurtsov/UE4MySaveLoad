@@ -20,7 +20,8 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 	UMySaveLoadState* const InState
 )
 {
-	UE_LOG(MyLog, Log, TEXT("SetupSaverLoaderBase..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	check(InSys);
 	check(InArchive);
@@ -35,31 +36,26 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 	State = InState;
 
 	PerObjectDataClass = UPerObjectSaveLoadData::StaticClass();
-
-	UE_LOG(MyLog, Log, TEXT("SetupSaverLoaderBase DONE"));
 }
 
 void UMySaverLoaderBase::SerializeToFromArchive()
 {
+	M_LOGFUNC_MSG(TEXT("Serializing binary world"));
 	LogBinaryWorld();
-
-	UE_LOG(MyLog, Log, TEXT("Serializing binary world..."));
 	GetAr() << GetBinaryWorld();
-	UE_LOG(MyLog, Log, TEXT("Serializing binary world DONE"));
 }
 
 void UMySaverLoaderBase::LogBinaryWorld()
 {
-	UE_LOG(MyLog, Log, TEXT("Binary world has:"));
-
-	UE_LOG(MyLog, Log, TEXT("%d classes"), GetBinaryWorld().Classes.Num());
-	UE_LOG(MyLog, Log, TEXT("%d global objects"), GetBinaryWorld().GlobalObjects.Num());
-	UE_LOG(MyLog, Log, TEXT("%d world objects"), GetBinaryWorld().WorldObjects.Num());
+	M_LOG(TEXT("Binary world has:"));
+	M_LOG(TEXT("%d classes"), GetBinaryWorld().Classes.Num());
+	M_LOG(TEXT("%d global objects"), GetBinaryWorld().GlobalObjects.Num());
+	M_LOG(TEXT("%d world objects"), GetBinaryWorld().WorldObjects.Num());
 }
 
 void UMySaverLoaderBase::AssignDataToAllObjects()
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects..."));
+	M_LOGFUNC();
 	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->WorldSaveableHandles)
 	{
 		AssignObjectData(SaveableHandle);
@@ -68,7 +64,6 @@ void UMySaverLoaderBase::AssignDataToAllObjects()
 	{
 		AssignObjectData(SaveableHandle);
 	}
-	UE_LOG(MyLog, Log, TEXT("UMySaverLoaderBase::AssignDataToAllObjects DONE"));
 }
 
 void UMySaverLoaderBase::AssignObjectData(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
@@ -89,7 +84,7 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Warning, TEXT("Saveable handle is nullptr"));
+			M_LOG_WARN(TEXT("Saveable handle is nullptr"));
 		}
 		return false;
 	}
@@ -98,14 +93,14 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 
 	if(bInLogged && (false == bLogOnFalseOnly) )
 	{
-		UE_LOG(MyLog, Log, TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
+		M_LOG(TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
 	}
 
 	if(false == InSaveableHandle->SaveLoad_IsEnabled())
 	{
 		if(bInLogged)
 		{
-			UE_LOG(MyLog, Log, TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
+			M_LOG(TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
 		}
 	
 		return false;
@@ -113,7 +108,7 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 
 	if(bInLogged && (false == bLogOnFalseOnly) )
 	{
-		UE_LOG(MyLog, Log, TEXT("%s: object is to be saved"), *PrefixString);
+		M_LOG(TEXT("%s: object is to be saved"), *PrefixString);
 	}
 
 	return true;

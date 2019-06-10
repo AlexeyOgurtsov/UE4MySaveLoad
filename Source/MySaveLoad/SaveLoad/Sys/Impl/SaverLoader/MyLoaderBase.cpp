@@ -17,16 +17,15 @@
 
 void UMyLoaderBase::SetupLoaderBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
-	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase..."));
-
+	M_LOGFUNC();
+	checkNoRecursion();
 	SetupSaverLoaderBase(ESaverOrLoader::Loader, InSys, InArchive, InWorld, InState);
-
-	UE_LOG(MyLog, Log, TEXT("SetupLoaderBase DONE"));
 }
 
 void UMyLoaderBase::Load()
 {
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::Load..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	CheckAndLoadBinaryFromArchive();
 
@@ -43,37 +42,34 @@ void UMyLoaderBase::Load()
 		// @TODO: Loading objects
 	}
 
-	UE_LOG(MyLog, Log, TEXT("NOT YET IMPL"));
-
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::Load DONE"));
+	M_NOT_IMPL(TEXT("Function is not complete yet"));
 }
 
 void UMyLoaderBase::CheckAndLoadBinaryFromArchive()
 {
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::CheckAndLoadBinaryFromArchive..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	GetAr() << GetBinaryWorld();
 	UMySaveLoadSystemUtils::CheckSavedWorldValid(&GetBinaryWorld());
-
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::CheckAndLoadBinaryFromArchive DONE"));
-
 }
 
 void UMyLoaderBase::LoadWorld()
 {
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadWorld..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	GetState()->MapName = GetBinaryWorld().WorldInfo.MapName;
-	UE_LOG(MyLog, Log, TEXT("Loaded map name: \"%s\""), *GetState()->MapName);
+	M_LOG(TEXT("Loaded map name: \"%s\""), *GetState()->MapName);
 
 	{
-		UE_LOG(MyLog, Log, TEXT("Checking map name"));
+		M_LOGBLOCK(TEXT("Checking map name"));
 
 		FString MapName, MapName_NoStreamingPrefix;
 
 		{
 			MapName = GetWorld()->GetMapName();
-			UE_LOG(MyLog, Log, TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
+			M_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
 		}
 
 	
@@ -81,87 +77,81 @@ void UMyLoaderBase::LoadWorld()
 			MapName_NoStreamingPrefix = MapName;
 			MapName_NoStreamingPrefix.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 
-			UE_LOG(MyLog, Log, TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
+			M_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
 		}
 
 		if(MapName_NoStreamingPrefix == GetState()->MapName)
 		{
-			UE_LOG(MyLog, Log, TEXT("MapName in the save file corresponds to current level's: skipping level load!"));
+			M_LOG(TEXT("MapName in the save file corresponds to current level's: skipping level load!"));
 		}
 		else
 		{
-			UE_LOG(MyLog, Log, TEXT("Loading level - MapName does NOT correspond the current level's"));	
-			UE_LOG(MyLog, Log, TEXT("Current map name is \"%s\" and map name in save file is \"%s\""), *MapName_NoStreamingPrefix, *GetState()->MapName);	
-			checkf(false, TEXT("Not yet impl: here we must load the level"));
+			M_LOG(TEXT("Loading level - MapName does NOT correspond the current level's"));	
+			M_LOG(TEXT("Current map name is \"%s\" and map name in save file is \"%s\""), *MapName_NoStreamingPrefix, *GetState()->MapName);	
+			M_TO_BE_IMPL(TEXT("here we must load the level"));
 		}
-
-		UE_LOG(MyLog, Log, TEXT("Checking map name DONE"));
 	}
-
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadWorld DONE"));
 }
 
 void UMyLoaderBase::LoadSavedClasses()
 {
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadSavedClasses..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
-	UE_LOG(MyLog, Log, TEXT("%d classes in the save file"), GetBinaryWorld().Classes.Num());
+	M_LOG(TEXT("%d classes in the save file"), GetBinaryWorld().Classes.Num());
 	GetState()->Classes.SetNum(GetBinaryWorld().Classes.Num());
 	for(int32 Index = 0; Index < GetBinaryWorld().Classes.Num(); Index++)
 	{
 		const FMySavedClass* SavedClass = &GetBinaryWorld().Classes[Index];
 		LoadSavedClass(Index, &GetState()->Classes[Index], SavedClass);
 	}
-
-	UE_LOG(MyLog, Log, TEXT("UMyLoaderBase::LoadSavedClasses DONE"));
 }
 
 void UMyLoaderBase::LoadSavedClass(int32 InClassIndex, UClass**ppOutClass, const FMySavedClass* SavedClass)
 {
-	UE_LOG(MyLog, Log, TEXT("Loading saved class named \"%s\" (index=%d)..."), *SavedClass->Name, InClassIndex);
+	M_LOGFUNC_MSG(TEXT("Loading saved class named \"%s\" (index=%d)..."), *SavedClass->Name, InClassIndex);
+	checkNoRecursion();
 	
 	check(ppOutClass);
 	check(SavedClass);
 
 	*ppOutClass = FindObject<UClass>(ANY_PACKAGE, *SavedClass->Name);
 	checkf(*ppOutClass, TEXT("FindObject<UClass> must succeed!!!"));
-
-	UE_LOG(MyLog, Log, TEXT("Loading saved class DONE"));
 }
 
 void UMyLoaderBase::DestroyExtraObjects()
 {
-	UE_LOG(MyLog, Log, TEXT("Destrong extra objects..."));
-	UE_LOG(MyLog, Log, TEXT("%d objects are marked as destroyed in the save file"), GetBinaryWorld().StaticDestructedObjects.Num());
+	M_LOGFUNC_MSG(TEXT("Destroying extra objects"));
+	checkNoRecursion();
+
+	M_LOG(TEXT("%d objects are marked as destroyed in the save file"), GetBinaryWorld().StaticDestructedObjects.Num());
 	GetState()->StaticDestructedObjects.Reserve(GetBinaryWorld().StaticDestructedObjects.Num());
 	for(const FMySavedDestruct& SavedObjectToDestruct: GetBinaryWorld().StaticDestructedObjects)
 	{
 		GetState()->StaticDestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
 
 		// @TODO: Find object by name
-		UE_LOG(MyLog, Error, TEXT("not yet impl")); TScriptInterface<IMySaveable> Obj = nullptr;
+		M_NOT_IMPL(TEXT("Find object by name")); TScriptInterface<IMySaveable> Obj = nullptr;
 
 		if(Obj)
 		{
-			TArray<FStringFormatArg> FormatArgs;
-			FormatArgs.Add(Obj->SaveLoad_GetUniqueName());
-			FormatArgs.Add(Obj.GetObject()->GetClass()->GetName());
-			FString PrefixString = FString::Format(TEXT("Destring extra object: checking object with UniqueName \"{0}\" of class \"{1}\": "), FormatArgs);
+			FString const PrefixString = FString::Printf(TEXT("Destring extra object: \"%s\""), *Obj->SaveLoad_ToString());
 
-			UE_LOG(MyLog, Log, TEXT("%sDestroying object..."), *PrefixString);
+			M_LOG(TEXT("%sDestroying object..."), *PrefixString);
 
 			// Chance for object to do some work before destruction		
 			Obj->SaveLoad_BeforeDestroy();
 
-			// @TODO: Is it right? Maybe we have some links to object still (in the renderer maybe)?
-			UE_LOG(MyLog, Error, TEXT("not yet impl: destruction")); //Obj->BeginDestroy();
+			{
+				M_NOT_IMPL(TEXT("Destruction"));
+				// @TODO: Is it right? Maybe we have some links to object still (in the renderer maybe)?
+			}
 		}
 	}
-	UE_LOG(MyLog, Log, TEXT("Destrong extra objects DONE"));
 }
 
 TScriptInterface<IMySaveableHandle> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)
 {
-	UE_LOG(MyLog, Error, TEXT("Not yet impl")); return nullptr;
+	M_NOT_IMPL_RET(TScriptInterface<IMySaveableHandle>(), TEXT("Write it"));
 }
       

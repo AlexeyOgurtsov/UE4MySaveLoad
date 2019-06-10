@@ -33,7 +33,9 @@ UMySaveableHandleObject* UMySaveableHandleObject::CreateSaveableHandleDefaultSub
 
 void UMySaveableHandleObject::BeginDestroy()
 {
-	UE_LOG(MyLog, Log, TEXT("%s UMySaveableHandleObject::BeginDestroy() overload is called"), *PrefixString);
+	M_LOGFUNC();
+	checkNoRecursion();
+
 	Super::BeginDestroy();
 	// WARNING!!! Here we must notify about ANY object destruction (NOT only for NON-created dynamically),
 	// the subsystem must determine by itself, whether it should do anything with this object	
@@ -52,6 +54,6 @@ IMySaveLoadSystem* UMySaveableHandleObject::GetSys() const
 
 void UMySaveableHandleObject::SaveLoad_AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
 {		
-	UE_LOG(MyLog, Log, TEXT("%s AssignData"), *PrefixString);
+	M_LOGFUNC();
 	Data = InData;
 }

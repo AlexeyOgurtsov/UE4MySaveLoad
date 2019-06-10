@@ -19,16 +19,16 @@
 
 void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
-	UE_LOG(MyLog, Log, TEXT("SetupSaverBase..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	SetupSaverLoaderBase(ESaverOrLoader::Saver, InSys, InArchive, InWorld, InState);
-
-	UE_LOG(MyLog, Log, TEXT("SetupSaverBase DONE"));
 }
 
 void UMySaverBase::Save()
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Save..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	{
 		 Extract_WorldInfo();
@@ -46,22 +46,20 @@ void UMySaverBase::Save()
 	}
 
 	BinarizeToArchive();
-
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Save DONE"));
 }
 
 void UMySaverBase::Extract_WorldInfo()
 {
-	UE_LOG(MyLog, Log, TEXT("Extracing info about the world..."));
+	M_LOGFUNC_MSG(TEXT("Extracing info about the world"));
 
 	{
-		UE_LOG(MyLog, Log, TEXT("Extracing map name..."));
+		M_LOGBLOCK(TEXT("Extracing map name"));
 
 		FString MapName, MapName_NoStreamingPrefix;
 
 		{
 			MapName = GetWorld()->GetMapName();
-			UE_LOG(MyLog, Log, TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
+			M_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
 		}
 
 	
@@ -71,10 +69,9 @@ void UMySaverBase::Extract_WorldInfo()
 
 			GetState()->MapName = MapName_NoStreamingPrefix;
 
-			UE_LOG(MyLog, Log, TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
+			M_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
 		}
 
-		UE_LOG(MyLog, Log, TEXT("Extracing map name DONE"));
 	}
 
 	UE_LOG(MyLog, Log, TEXT("Extracing info about the world DONE"));
@@ -82,27 +79,25 @@ void UMySaverBase::Extract_WorldInfo()
 
 void UMySaverBase::Extract_DestructedObjects()
 {
-	UE_LOG(MyLog, Log, TEXT("Extracing info about destructed objects..."));
+	M_LOGFUNC_MSG(TEXT("Extracing info about destructed objects"));
 	GetState()->StaticDestructedObjects = GetSys()->GetStaticDestructedObjects();
-	UE_LOG(MyLog, Log, TEXT("%d destructed objects found"), GetState()->StaticDestructedObjects.Num());
+	M_LOG(TEXT("%d destructed objects found"), GetState()->StaticDestructedObjects.Num());
 	for(const FName& DestructObjectName : GetState()->StaticDestructedObjects)
 	{
-		UE_LOG(MyLog, Log, TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
+		M_LOG(TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
 	}
-	UE_LOG(MyLog, Log, TEXT("Extracing info about destructed objects DONE"));
 }
 
 void UMySaverBase::BinarizeToArchive()
 {
-	UE_LOG(MyLog, Log, TEXT("Binarizing to archive..."));
+	M_LOGFUNC_MSG(TEXT("Binarizing to archive..."));
 	UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(this, &GetBinaryWorld(), GetState());
 	SerializeToFromArchive();
-	UE_LOG(MyLog, Log, TEXT("Binarizing to archive DONE"));
 }
 
 void UMySaverBase::Find_WorldObjects()
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_WorldObjects..."));
+	M_LOGFUNC_MSG(TEXT("Searching world objects"))
 
 	int32 NumGlobalObjectsInWorld = 0;
 	for(TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator Itr = GetSys()->CreateSaveableHandleIterator(); Itr; ++Itr)
@@ -115,66 +110,60 @@ void UMySaverBase::Find_WorldObjects()
 			}
 			else
 			{
-				UE_LOG(MyLog, Log, TEXT("Global object \"%s\" found"), *(*Itr)->SaveLoad_ToString());
+				M_LOG(TEXT("Global object \"%s\" found"), *(*Itr)->SaveLoad_ToString());
 				NumGlobalObjectsInWorld++;
 			}
 		}		
 	}
 	UE_LOG(MyLog, Log, TEXT("%d saveable actors found, %d global objects in world"), GetState()->WorldSaveableHandles.Num(), NumGlobalObjectsInWorld);
-
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_WorldObjects DONE"));
 }
 
 void UMySaverBase::Find_GlobalObjects()
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_GlobalObjects..."));
+	M_LOGFUNC_MSG(TEXT("Searching global objects"));
 
+	M_IMPL_NOTE(TEXT("Should we at all search global objects?"));
 	Find_GlobalObject_PlayerController();
 	Find_GlobalObject_GameMode();
 	Find_GlobalObject_GameInstance();
 
-	UE_LOG(MyLog, Log, TEXT("Total %d global objects registered"), GetState()->GlobalSaveableHandles.Num());
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::Find_GlobalObjects DONE"));
+	M_LOG(TEXT("Total %d global objects registered"), GetState()->GlobalSaveableHandles.Num());
 }
 
 
 void UMySaverBase::Find_GlobalObject_PlayerController()
 {
-	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_PlayerController..."));
+	M_LOGFUNC_MSG(TEXT("Searching player controller"));
 	
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(PC == nullptr)
 	{
-		UE_LOG(MyLog, Log, TEXT("UGameplayStatics::GetPlayerController() returned nullptr!"));
+		M_LOG_WARN(TEXT("UGameplayStatics::GetPlayerController() returned nullptr"));
 	}
 	else
 	{
 		RegisterGlobalObject_IfShouldBeSaved(PC);
 	}
-
-	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_PlayerController DONE"));
 }
 
 void UMySaverBase::Find_GlobalObject_GameMode()
 {
-	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_GameMode..."));
+	M_LOGFUNC_MSG(TEXT("Searching game mode"));
 	
 	AGameModeBase* G = GetWorld()->GetAuthGameMode();
 	if(G == nullptr)
 	{
-		UE_LOG(MyLog, Log, TEXT("GetAuthGameMode() returned nullptr!"));
+		M_LOG_WARN(TEXT("GetAuthGameMode() returned nullptr!"));
 	}
 	else
 	{
 		RegisterGlobalObject_IfShouldBeSaved(G);
 	}
-
-	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_GameMode DONE"));
 }
 
 void UMySaverBase::Find_GlobalObject_GameInstance()
 {
-	UE_LOG(MyLog, Log, TEXT("Find_GlobalObject_GameInstance..."));
+	M_LOGFUNC_MSG(TEXT("Searching Game Instance"));
 
 	UGameInstance* const G = GetWorld()->GetGameInstance();
 	RegisterGlobalObject_IfShouldBeSaved(G);
@@ -184,7 +173,7 @@ void UMySaverBase::Find_GlobalObject_GameInstance()
 
 void UMySaverBase::Extract_ClassTable()
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable..."));
+	M_LOGFUNC_MSG(TEXT("Extracing class table"));
 	
 	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->GlobalSaveableHandles)
 	{
@@ -200,8 +189,6 @@ void UMySaverBase::Extract_ClassTable()
 
 	BindClassIndicesToObjects(GetState()->GlobalSaveableHandles);
 	BindClassIndicesToObjects(GetState()->WorldSaveableHandles);
-
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::ExtractClassTable DONE"));
 }
 
 void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySaveableHandle>>& InSaveableHandles)
@@ -224,21 +211,21 @@ void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySa
 
 void UMySaverBase::RegisterGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject..."));
+	M_LOGFUNC_MSG(TEXT("Registering global object"));
 	check(InSaveableHandle);
-	UE_LOG(MyLog, Log, TEXT("Object \"%s\""), *InSaveableHandle->SaveLoad_ToString());
+	M_LOG(TEXT("Object \"%s\""), *InSaveableHandle->SaveLoad_ToString());
 	bool const bAdded = (1 == GetState()->GlobalSaveableHandles.AddUnique(InSaveableHandle));
 	checkf(bAdded, TEXT("Saveable handle must be successfully added to the container"));
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject DONE"));
 }
 
 void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 {
-	UE_LOG(MyLog, Log, TEXT("UMySaverBase::RegisterGlobalObject_IfShouldBeSaved..."));
+	M_LOGFUNC();
+	checkNoRecursion();
 
 	if(InObject == nullptr)
 	{
-		UE_LOG(MyLog, Log, TEXT("Skipping object registration - passed object is nullptr"));
+		M_LOG_WARN(TEXT("Skipping object registration - passed object is nullptr"));
 		return;
 	}
 
@@ -246,7 +233,7 @@ void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 	{
 		TScriptInterface<IMySaveableHandle> const SaveableHandle = Saveable->SaveLoad_GetHandle();
 		checkf(SaveableHandle, TEXT("SaveableHandle should never be nullptr"));
-		UE_LOG(MyLog, Log, TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
+		M_LOG(TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
 
 		if(ShouldObjectBeSaved(SaveableHandle, /*bLogged=*/true))
 		{
