@@ -6,7 +6,7 @@
 #include "../Sys/IMySaveLoadSystemInternal.h"
 #include "MySaveLoadSystemUtils.h"
 
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Engine/World.h"
 #include "Serialization/Archive.h"
@@ -20,7 +20,7 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 	UMySaveLoadState* const InState
 )
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	checkNoRecursion();
 
 	check(InSys);
@@ -40,22 +40,22 @@ void UMySaverLoaderBase::SetupSaverLoaderBase
 
 void UMySaverLoaderBase::SerializeToFromArchive()
 {
-	M_LOGFUNC_MSG(TEXT("Serializing binary world"));
+	SL_LOGFUNC_MSG(TEXT("Serializing binary world"));
 	LogBinaryWorld();
 	GetAr() << GetBinaryWorld();
 }
 
 void UMySaverLoaderBase::LogBinaryWorld()
 {
-	M_LOG(TEXT("Binary world has:"));
-	M_LOG(TEXT("%d classes"), GetBinaryWorld().Classes.Num());
-	M_LOG(TEXT("%d global objects"), GetBinaryWorld().GlobalObjects.Num());
-	M_LOG(TEXT("%d world objects"), GetBinaryWorld().WorldObjects.Num());
+	SL_LOG(TEXT("Binary world has:"));
+	SL_LOG(TEXT("%d classes"), GetBinaryWorld().Classes.Num());
+	SL_LOG(TEXT("%d global objects"), GetBinaryWorld().GlobalObjects.Num());
+	SL_LOG(TEXT("%d world objects"), GetBinaryWorld().WorldObjects.Num());
 }
 
 void UMySaverLoaderBase::AssignDataToAllObjects()
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->WorldSaveableHandles)
 	{
 		AssignObjectData(SaveableHandle);
@@ -84,7 +84,7 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 	{
 		if(bInLogged)
 		{
-			M_LOG_WARN(TEXT("Saveable handle is nullptr"));
+			SL_LOG_WARN(TEXT("Saveable handle is nullptr"));
 		}
 		return false;
 	}
@@ -93,14 +93,14 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 
 	if(bInLogged && (false == bLogOnFalseOnly) )
 	{
-		M_LOG(TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
+		SL_LOG(TEXT("%s: supports IMySaveable, UniqueName is \"%s\""), *PrefixString, *InSaveableHandle->SaveLoad_GetUniqueName());
 	}
 
 	if(false == InSaveableHandle->SaveLoad_IsEnabled())
 	{
 		if(bInLogged)
 		{
-			M_LOG(TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
+			SL_LOG(TEXT("%s: SaveLoad flag is NOT set"), *PrefixString);
 		}
 	
 		return false;
@@ -108,7 +108,7 @@ bool UMySaverLoaderBase::ShouldObjectBeSaved(TScriptInterface<IMySaveableHandle>
 
 	if(bInLogged && (false == bLogOnFalseOnly) )
 	{
-		M_LOG(TEXT("%s: object is to be saved"), *PrefixString);
+		SL_LOG(TEXT("%s: object is to be saved"), *PrefixString);
 	}
 
 	return true;

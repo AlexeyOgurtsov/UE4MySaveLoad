@@ -7,7 +7,7 @@
 #include "PerObjectSaveLoadData.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
 
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameModeBase.h"
@@ -19,7 +19,7 @@
 
 void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchive* const InArchive, UWorld* const InWorld, UMySaveLoadState* const InState)
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	checkNoRecursion();
 
 	SetupSaverLoaderBase(ESaverOrLoader::Saver, InSys, InArchive, InWorld, InState);
@@ -27,7 +27,7 @@ void UMySaverBase::SetupSaverBase(IMySaveLoadSystemInternal* const InSys, FArchi
 
 void UMySaverBase::Save()
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	checkNoRecursion();
 
 	{
@@ -50,16 +50,16 @@ void UMySaverBase::Save()
 
 void UMySaverBase::Extract_WorldInfo()
 {
-	M_LOGFUNC_MSG(TEXT("Extracing info about the world"));
+	SL_LOGFUNC_MSG(TEXT("Extracing info about the world"));
 
 	{
-		M_LOGBLOCK(TEXT("Extracing map name"));
+		SL_LOGBLOCK(TEXT("Extracing map name"));
 
 		FString MapName, MapName_NoStreamingPrefix;
 
 		{
 			MapName = GetWorld()->GetMapName();
-			M_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
+			SL_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
 		}
 
 	
@@ -69,7 +69,7 @@ void UMySaverBase::Extract_WorldInfo()
 
 			GetState()->MapName = MapName_NoStreamingPrefix;
 
-			M_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
+			SL_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
 		}
 
 	}
@@ -79,25 +79,25 @@ void UMySaverBase::Extract_WorldInfo()
 
 void UMySaverBase::Extract_DestructedObjects()
 {
-	M_LOGFUNC_MSG(TEXT("Extracing info about destructed objects"));
+	SL_LOGFUNC_MSG(TEXT("Extracing info about destructed objects"));
 	GetState()->StaticDestructedObjects = GetSys()->GetStaticDestructedObjects();
-	M_LOG(TEXT("%d destructed objects found"), GetState()->StaticDestructedObjects.Num());
+	SL_LOG(TEXT("%d destructed objects found"), GetState()->StaticDestructedObjects.Num());
 	for(const FName& DestructObjectName : GetState()->StaticDestructedObjects)
 	{
-		M_LOG(TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
+		SL_LOG(TEXT("DestructedObject: named \"%s\""), *DestructObjectName.ToString());
 	}
 }
 
 void UMySaverBase::BinarizeToArchive()
 {
-	M_LOGFUNC_MSG(TEXT("Binarizing to archive..."));
+	SL_LOGFUNC_MSG(TEXT("Binarizing to archive..."));
 	UMySaveLoadSystemUtils::SaveLoadStateToSaveStruct(this, &GetBinaryWorld(), GetState());
 	SerializeToFromArchive();
 }
 
 void UMySaverBase::Find_WorldObjects()
 {
-	M_LOGFUNC_MSG(TEXT("Searching world objects"))
+	SL_LOGFUNC_MSG(TEXT("Searching world objects"))
 
 	int32 NumGlobalObjectsInWorld = 0;
 	for(TArray<TScriptInterface<IMySaveableHandle>>::TConstIterator Itr = GetSys()->CreateSaveableHandleIterator(); Itr; ++Itr)
@@ -110,7 +110,7 @@ void UMySaverBase::Find_WorldObjects()
 			}
 			else
 			{
-				M_LOG(TEXT("Global object \"%s\" found"), *(*Itr)->SaveLoad_ToString());
+				SL_LOG(TEXT("Global object \"%s\" found"), *(*Itr)->SaveLoad_ToString());
 				NumGlobalObjectsInWorld++;
 			}
 		}		
@@ -120,25 +120,25 @@ void UMySaverBase::Find_WorldObjects()
 
 void UMySaverBase::Find_GlobalObjects()
 {
-	M_LOGFUNC_MSG(TEXT("Searching global objects"));
+	SL_LOGFUNC_MSG(TEXT("Searching global objects"));
 
-	M_IMPL_NOTE(TEXT("Should we at all search global objects?"));
+	SL_IMPL_NOTE(TEXT("Should we at all search global objects?"));
 	Find_GlobalObject_PlayerController();
 	Find_GlobalObject_GameMode();
 	Find_GlobalObject_GameInstance();
 
-	M_LOG(TEXT("Total %d global objects registered"), GetState()->GlobalSaveableHandles.Num());
+	SL_LOG(TEXT("Total %d global objects registered"), GetState()->GlobalSaveableHandles.Num());
 }
 
 
 void UMySaverBase::Find_GlobalObject_PlayerController()
 {
-	M_LOGFUNC_MSG(TEXT("Searching player controller"));
+	SL_LOGFUNC_MSG(TEXT("Searching player controller"));
 	
 	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	if(PC == nullptr)
 	{
-		M_LOG_WARN(TEXT("UGameplayStatics::GetPlayerController() returned nullptr"));
+		SL_LOG_WARN(TEXT("UGameplayStatics::GetPlayerController() returned nullptr"));
 	}
 	else
 	{
@@ -148,12 +148,12 @@ void UMySaverBase::Find_GlobalObject_PlayerController()
 
 void UMySaverBase::Find_GlobalObject_GameMode()
 {
-	M_LOGFUNC_MSG(TEXT("Searching game mode"));
+	SL_LOGFUNC_MSG(TEXT("Searching game mode"));
 	
 	AGameModeBase* G = GetWorld()->GetAuthGameMode();
 	if(G == nullptr)
 	{
-		M_LOG_WARN(TEXT("GetAuthGameMode() returned nullptr!"));
+		SL_LOG_WARN(TEXT("GetAuthGameMode() returned nullptr!"));
 	}
 	else
 	{
@@ -163,7 +163,7 @@ void UMySaverBase::Find_GlobalObject_GameMode()
 
 void UMySaverBase::Find_GlobalObject_GameInstance()
 {
-	M_LOGFUNC_MSG(TEXT("Searching Game Instance"));
+	SL_LOGFUNC_MSG(TEXT("Searching Game Instance"));
 
 	UGameInstance* const G = GetWorld()->GetGameInstance();
 	RegisterGlobalObject_IfShouldBeSaved(G);
@@ -173,7 +173,7 @@ void UMySaverBase::Find_GlobalObject_GameInstance()
 
 void UMySaverBase::Extract_ClassTable()
 {
-	M_LOGFUNC_MSG(TEXT("Extracing class table"));
+	SL_LOGFUNC_MSG(TEXT("Extracing class table"));
 	
 	for(TScriptInterface<IMySaveableHandle> SaveableHandle : GetState()->GlobalSaveableHandles)
 	{
@@ -211,21 +211,21 @@ void UMySaverBase::BindClassIndicesToObjects(const TArray<TScriptInterface<IMySa
 
 void UMySaverBase::RegisterGlobalObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	M_LOGFUNC_MSG(TEXT("Registering global object"));
+	SL_LOGFUNC_MSG(TEXT("Registering global object"));
 	check(InSaveableHandle);
-	M_LOG(TEXT("Object \"%s\""), *InSaveableHandle->SaveLoad_ToString());
+	SL_LOG(TEXT("Object \"%s\""), *InSaveableHandle->SaveLoad_ToString());
 	bool const bAdded = (1 == GetState()->GlobalSaveableHandles.AddUnique(InSaveableHandle));
 	checkf(bAdded, TEXT("Saveable handle must be successfully added to the container"));
 }
 
 void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	checkNoRecursion();
 
 	if(InObject == nullptr)
 	{
-		M_LOG_WARN(TEXT("Skipping object registration - passed object is nullptr"));
+		SL_LOG_WARN(TEXT("Skipping object registration - passed object is nullptr"));
 		return;
 	}
 
@@ -233,7 +233,7 @@ void UMySaverBase::RegisterGlobalObject_IfShouldBeSaved(UObject* const InObject)
 	{
 		TScriptInterface<IMySaveableHandle> const SaveableHandle = Saveable->SaveLoad_GetHandle();
 		checkf(SaveableHandle, TEXT("SaveableHandle should never be nullptr"));
-		M_LOG(TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
+		SL_LOG(TEXT("Object \"%s\""), *SaveableHandle->SaveLoad_ToString());
 
 		if(ShouldObjectBeSaved(SaveableHandle, /*bLogged=*/true))
 		{

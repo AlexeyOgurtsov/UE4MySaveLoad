@@ -33,6 +33,9 @@ public:
 
 	FString SaveLoad_ToString() const;
 
+	const UObject* SaveLoad_GetObject() const { return Cast<const UObject>(this); }
+	UObject* SaveLoad_GetObject() { return Cast<UObject>(this); }
+
 	/**
 	* Returns string in form "{Prefix}: {SaveLoad_ToString() result}"
 	*/

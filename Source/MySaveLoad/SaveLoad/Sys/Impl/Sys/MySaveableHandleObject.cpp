@@ -4,7 +4,7 @@
 #include "SaveLoad/IMySaveLoadSystem.h"
 #include "SaveLoad/Util/MySaveArchive.h"
 
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Serialization/Archive.h"
 
@@ -33,7 +33,7 @@ UMySaveableHandleObject* UMySaveableHandleObject::CreateSaveableHandleDefaultSub
 
 void UMySaveableHandleObject::BeginDestroy()
 {
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	checkNoRecursion();
 
 	Super::BeginDestroy();
@@ -54,6 +54,6 @@ IMySaveLoadSystem* UMySaveableHandleObject::GetSys() const
 
 void UMySaveableHandleObject::SaveLoad_AssignData(UMySaverLoaderBase* const InSender, UPerObjectSaveLoadDataBase* const InData)
 {		
-	M_LOGFUNC();
+	SL_LOGFUNC();
 	Data = InData;
 }

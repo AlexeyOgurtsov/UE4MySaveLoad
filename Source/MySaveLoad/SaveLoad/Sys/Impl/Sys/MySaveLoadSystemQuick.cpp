@@ -2,7 +2,7 @@
 #include "SaveLoad/IMySaveable.h"
 #include "../../MySaveableHandleObject.h"
 
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Engine/World.h"
 
@@ -15,20 +15,20 @@ namespace
 		FString const PrefixString = InSaveableHandle->SaveLoad_GetPrefixString(TEXT("Skipping registration for"));
 		if(false == InSaveableHandle->SaveLoad_IsEnabled())
 		{
-			M_LOG(TEXT("%s SaveLoad is diabled"), *PrefixString);
+			SL_LOG(TEXT("%s SaveLoad is diabled"), *PrefixString);
 			return false;
 		}
 
 		const IMySaveable* const Saveable = Cast<IMySaveable>(InSaveableHandle->SaveLoad_GetSaveable().GetObject());
 		UObject* const SaveableObject = InSaveableHandle->SaveLoad_GetSaveable().GetObject();
-		M_LOG_ERROR(TEXT("%s Saveable object assigned to handle should never be nullptr"), *PrefixString);
+		SL_LOG_ERROR(TEXT("%s Saveable object assigned to handle should never be nullptr"), *PrefixString);
 
 		if(const UWorld* const World = InSaveableHandle.GetObject()->GetWorld())
 		{
-			M_LOG_WARN(TEXT("%s GetWorld() returned nullptr - maybe you forgot to implement GetWorld() (it's NOT implemented for UObject by default)"), *PrefixString);
+			SL_LOG_WARN(TEXT("%s GetWorld() returned nullptr - maybe you forgot to implement GetWorld() (it's NOT implemented for UObject by default)"), *PrefixString);
 			if(false == World->IsGameWorld())	
 			{
-				M_LOG(TEXT("%s Object's assigned world (returned by GetWorld()) is NOT game world"), *PrefixString);
+				SL_LOG(TEXT("%s Object's assigned world (returned by GetWorld()) is NOT game world"), *PrefixString);
 				return false;
 			}
 		}	
@@ -53,11 +53,11 @@ TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle
 
 void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	M_LOGFUNC_MSG(TEXT("Registering saveable object"));
+	SL_LOGFUNC_MSG(TEXT("Registering saveable object"));
 	checkNoRecursion();
 
 	check(InSaveableHandle);
-	M_LOG(TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is")));
+	SL_LOG(TEXT("%s"), *InSaveableHandle->SaveLoad_ToStringPrefixed(TEXT("Saveable is")));
 
 	if(ShouldRegisterSaveable(InSaveableHandle))
 	{
@@ -77,7 +77,7 @@ void UMySaveLoadSystemQuick::UnregisterSaveableObjectChecked(TScriptInterface<IM
 
 void UMySaveLoadSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
-	M_LOGFUNC_MSG(TEXT("Notified that object is destructed"));
+	SL_LOGFUNC_MSG(TEXT("Notified that object is destructed"));
 	checkNoRecursion();
 
 	if(InSaveableHandle->SaveLoad_IsEnabled())
@@ -86,12 +86,12 @@ void UMySaveLoadSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveable
 		{
 			UnregisterSaveableObjectChecked(InSaveableHandle);
 
-			M_LOG(TEXT("Object is static, destructed object is accounted"));
+			SL_LOG(TEXT("Object is static, destructed object is accounted"));
 			StaticDestructedObjects.Add(InSaveableHandle->SaveLoad_GetUniqueFName());
 		}
 	}
 	else
 	{
-		M_LOG(TEXT("Object: SaveLoad is NOT enabled - skipping accounting"));
+		SL_LOG(TEXT("Object: SaveLoad is NOT enabled - skipping accounting"));
 	}
 }

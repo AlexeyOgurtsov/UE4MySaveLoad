@@ -7,7 +7,7 @@
 #include "SaveLoad/MySaveableUtils.h"
 
 #include "SaveLoad/Util/MySaveArchive.h"
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Serialization/MemoryWriter.h"
 
@@ -37,7 +37,7 @@ bool UMySaveLoadSystemUtils::IsSavedWorldMetaValid(const FMySaveFormatMeta* cons
 	{		
 		if(bInLogged)
 		{
-			M_LOG_ERROR(TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
+			SL_LOG_ERROR(TEXT("Format signature is wrong (\"%s\" found, but \"%s\" required)"), *InMeta->Signature, *FORMAT_SIGNATURE);
 		}
 		return false;
 	}
@@ -69,7 +69,7 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 	{
 		if(bInLogged)
 		{
-			M_LOG_ERROR(TEXT("%sClass index is negative"), *LogPrefix);
+			SL_LOG_ERROR(TEXT("%sClass index is negative"), *LogPrefix);
 		}
 		return false;
 	}
@@ -78,7 +78,7 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 	{
 		if(bInLogged)
 		{
-			M_LOG_ERROR(TEXT("%sClass index is greater than all classes"), *LogPrefix);
+			SL_LOG_ERROR(TEXT("%sClass index is greater than all classes"), *LogPrefix);
 		}
 		return false;
 	}
@@ -88,14 +88,14 @@ bool UMySaveLoadSystemUtils::IsSavedClassIndexValid(UMySaverLoaderBase* const In
 
 void UMySaveLoadSystemUtils::PrepareFormatMetaSaveStruct(UMySaverLoaderBase* InSender, FMySaveFormatMeta* const InSavedFormatMeta)
 {
-	M_LOG(TEXT("Preparing save format meta"));
+	SL_LOG(TEXT("Preparing save format meta"));
 	InSavedFormatMeta->Signature = FORMAT_SIGNATURE;
 	UE_LOG(MyLog, Log, TEXT("Signature: \"%s\""), *InSavedFormatMeta->Signature);
 }
 
 void UMySaveLoadSystemUtils::PrepareWorldInfoSaveStruct(UMySaverLoaderBase* InSender, FMySavedWorldInfo* const InSavedWorldInfo, const UMySaveLoadState* const InSaveLoadState)
 {
-	M_LOG(TEXT("Preparing world info save struct"));
+	SL_LOG(TEXT("Preparing world info save struct"));
 	InSavedWorldInfo->MapName = InSaveLoadState->MapName;
 	UE_LOG(MyLog, Log, TEXT("MapName: \"%s\""), *InSavedWorldInfo->MapName);
 }
@@ -114,7 +114,7 @@ void UMySaveLoadSystemUtils::PrepareDestructedObjects_FromLoadState(UMySaverLoad
 		PrepareObjectDestructStruct(InSender, &SavedDestruct, DestructedName);
 		InSavedDestructedObjects->Add(SavedDestruct);
 	}
-	M_LOG(TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
+	SL_LOG(TEXT("%d Destructed objects loaded from LoadState"), InSavedDestructedObjects->Num());
 }
 
 void UMySaveLoadSystemUtils::PrepareObjectSaveStruct(UMySaverLoaderBase* const InSender, FMySavedObject* const InSavedObj, TScriptInterface<IMySaveableHandle> const InSaveableHandle)

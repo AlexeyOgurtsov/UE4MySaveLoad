@@ -2,22 +2,22 @@
 #include "SaveLoad/IMySaveable.h"
 #include "SaveLoad/Util/MySaveArchive.h"
 
-#include "Util/Core/LogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 void UMySaveableUtils::Default_Serialize(TScriptInterface<IMySaveable> const InSaveable, FArchive& Ar)
 {
-	M_LOG(TEXT("%s Default_Serialize is called"), *InSaveable->SaveLoad_ToString());
+	SL_LOG(TEXT("%s Default_Serialize is called"), *InSaveable->SaveLoad_ToString());
 	SerializeObjectData(Ar, InSaveable.GetObject());
 }
 
 void UMySaveableUtils::Default_AllObjectsLoaded(TScriptInterface<IMySaveable> const InSaveable, FArchive& Ar)
 {
-	M_EMPTY();
+	SL_EMPTY();
 }
 
 void UMySaveableUtils::Default_BeforeDestroy(TScriptInterface<IMySaveable> const InSaveable)
 {
-	M_EMPTY();
+	SL_EMPTY();
 }
 
 void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* const InObj)
@@ -31,7 +31,7 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> const InSav
 	{
 		if(bInLogged)
 		{
-			M_LOG_ERROR(TEXT("%s: UniqueName must always be set for saveable object"), *InSaveable->SaveLoad_GetPrefixString());
+			SL_LOG_ERROR(TEXT("%s: UniqueName must always be set for saveable object"), *InSaveable->SaveLoad_GetPrefixString());
 		}
 		return false;
 	}
@@ -56,7 +56,7 @@ bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> const
 	{
 		if(bInLogged)
 		{
-			M_LOG_ERROR(TEXT("%s: Global objects cannot be marked as dynamic"), *InSaveable->SaveLoad_GetPrefixString());
+			SL_LOG_ERROR(TEXT("%s: Global objects cannot be marked as dynamic"), *InSaveable->SaveLoad_GetPrefixString());
 		}
 		return false;
 	}
