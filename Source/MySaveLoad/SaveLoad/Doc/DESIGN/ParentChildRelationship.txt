@@ -1,0 +1,14 @@
+********* Child-parent object hierarchy.
+****** PROBLEM: Child object implements saveable and is child (direct or indirect) of other saveable object.
+
+* When serializing parent of saveable object, SaveLoad_Serialize is to be called for saveable subobject instead of Serialize,
+and the native Serialize is not called. PROBLEM: How to implement? The parent object may be non-saveable by itself 
+(for example, if it's a struct) - so, how to overload the Serialize method? Or IMySaveable::SaveLoad_Serialize
+should use custom object serialization and NOT default Serialize method, and work the graph by itself?
+
+*** SOLUTION 1: In the case of parent-child relationships of saveable objects, saveable parent (direct on indirect)
+is responsible for save load of its children by itself. 
+
+So, saveable properties NEVER allowed to be marked with SaveGame. SaveGame-marked properties do may be
+instances of IMySaveable interface, however automatic save-load must be disabled for them.
+

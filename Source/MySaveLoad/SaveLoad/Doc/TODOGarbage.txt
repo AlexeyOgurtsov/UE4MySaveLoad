@@ -1,9 +1,7 @@
-TODO Today:
+-----------
 2. IMySaveableHandle: GetSaveData/AssignSaveData:
 2.1. Sender: must be public available type, not UMySaverLoaderBase, which is quick saveload subsystem implemetation specific.
 
------------
-TODO
 1. Global library (service) for working with SaveSystem entirely
 
 *** Service locator:
