@@ -4,8 +4,9 @@
 #include "MySaveLoadSystemUtils.h"
 #include "SaveLoad/IMySaveable.h"
 #include "SaveLoad/MySaveableUtils.h"
-
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
+
+#include "Util/Core/WorldUtilLib.h"
 
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameModeBase.h"
@@ -65,20 +66,7 @@ void UMyLoaderBase::LoadWorld()
 	{
 		SL_LOGBLOCK(TEXT("Checking map name"));
 
-		FString MapName, MapName_NoStreamingPrefix;
-
-		{
-			MapName = GetWorld()->GetMapName();
-			SL_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
-		}
-
-	
-		{
-			MapName_NoStreamingPrefix = MapName;
-			MapName_NoStreamingPrefix.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
-
-			SL_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
-		}
+		FString const MapName_NoStreamingPrefix = UWorldUtilLib::GetMapName_NoStreamingPrefix(GetWorld(), ELogFlags::LogEverSuccess);
 
 		if(MapName_NoStreamingPrefix == GetState()->MapName)
 		{
