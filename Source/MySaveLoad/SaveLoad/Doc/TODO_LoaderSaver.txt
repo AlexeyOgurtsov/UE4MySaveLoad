@@ -1,3 +1,0 @@
-Loaders and savers implementation.
-
-1. Common code: MapName

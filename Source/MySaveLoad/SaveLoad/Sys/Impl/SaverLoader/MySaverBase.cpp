@@ -9,6 +9,8 @@
 
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
+#include "Util/Core/WorldUtilLib.h"
+
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/PlayerController.h"
@@ -52,27 +54,7 @@ void UMySaverBase::Extract_WorldInfo()
 {
 	SL_LOGFUNC_MSG(TEXT("Extracing info about the world"));
 
-	{
-		SL_LOGBLOCK(TEXT("Extracing map name"));
-
-		FString MapName, MapName_NoStreamingPrefix;
-
-		{
-			MapName = GetWorld()->GetMapName();
-			SL_LOG(TEXT("GetWorld()->GetMapName() returned \"%s\""), *MapName);
-		}
-
-	
-		{
-			MapName_NoStreamingPrefix = MapName;
-			MapName_NoStreamingPrefix.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
-
-			GetState()->MapName = MapName_NoStreamingPrefix;
-
-			SL_LOG(TEXT("MapName(no streaming prefix): \"%s\""), *MapName_NoStreamingPrefix);
-		}
-
-	}
+	GetState()->MapName = UWorldUtilLib::GetMapName_NoStreamingPrefix(GetWorld(), ELogFlags::LogEverSuccess);
 
 	UE_LOG(MyLog, Log, TEXT("Extracing info about the world DONE"));
 }
