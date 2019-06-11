@@ -18,8 +18,8 @@ class UMySaveLoadSystemQuick :
 
 public:
 	// ~IMySaveLoadSystem Begin
-	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InObject) override;
-	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> InSaveableHandle) override;
+	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle_Implementation(const TScriptInterface<IMySaveable>& InSaveable) override;
+	virtual void NotifySaveableDestructed_Implementation(const TScriptInterface<IMySaveableHandle>& InSaveableHandle) override;
 	// ~IMySaveLoadSystem End
 
 	// ~IMySaveLoadSystemInternal Begin

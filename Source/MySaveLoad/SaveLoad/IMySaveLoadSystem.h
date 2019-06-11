@@ -26,8 +26,11 @@ public:
 	*
 	* @returns: always returns valid handle object.
 	*/
-	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle(TScriptInterface<IMySaveable> InSaveable) = 0;
-	virtual void NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> InSaveableHandle) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
+	TScriptInterface<IMySaveableHandle> CreateSaveableHandle(const TScriptInterface<IMySaveable>& InSaveable);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
+	void NotifySaveableDestructed(const TScriptInterface<IMySaveableHandle>& InSaveableHandle);
 };
 
 

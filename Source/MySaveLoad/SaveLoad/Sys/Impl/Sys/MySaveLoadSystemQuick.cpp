@@ -42,15 +42,6 @@ namespace
 	}
 } // anonymous
 
-TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle(TScriptInterface<IMySaveable> const InSaveable) 
-{
-	checkNoRecursion();
-
-	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
-	RegisterSaveableObject(SaveableHandle);
-	return SaveableHandle;
-}
-
 void UMySaveLoadSystemQuick::RegisterSaveableObject(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
 {
 	SL_LOGFUNC_MSG(TEXT("Registering saveable object"));
@@ -75,7 +66,17 @@ void UMySaveLoadSystemQuick::UnregisterSaveableObjectChecked(TScriptInterface<IM
 	checkf(bFoundAndRemoved, TEXT("The given saveable handle must be registered"));
 }
 
-void UMySaveLoadSystemQuick::NotifyObjectDestructed(TScriptInterface<IMySaveableHandle> const InSaveableHandle)
+TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle_Implementation(const TScriptInterface<IMySaveable>& InSaveable)
+{
+	checkNoRecursion();
+
+	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
+	RegisterSaveableObject(SaveableHandle);
+	checkf(SaveableHandle, TEXT("Returned SaveableHandle must always be valid"));
+	return SaveableHandle;
+}
+
+void UMySaveLoadSystemQuick::NotifySaveableDestructed_Implementation(const TScriptInterface<IMySaveableHandle>& InSaveableHandle)
 {
 	SL_LOGFUNC_MSG(TEXT("Notified that object is destructed"));
 	checkNoRecursion();

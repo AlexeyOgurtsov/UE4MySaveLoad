@@ -39,7 +39,7 @@ void UMySaveableHandleObject::BeginDestroy()
 	Super::BeginDestroy();
 	// WARNING!!! Here we must notify about ANY object destruction (NOT only for NON-created dynamically),
 	// the subsystem must determine by itself, whether it should do anything with this object	
-	Sys->NotifyObjectDestructed(this);
+	IMySaveLoadSystem::Execute_NotifySaveableDestructed(Cast<UObject>(Sys), this);
 }
 
 void UMySaveableHandleObject::InitPrefixString()
