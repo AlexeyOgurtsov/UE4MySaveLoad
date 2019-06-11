@@ -1,5 +1,0 @@
-*** Verified return macro***
-Returns the value and checks that it satisfies the given condition.
-
-RETURN_VERIFY(ReturnValue, AssertionExpression)
-RETURN_VERIFY_MSG(ReturnValue, AssertionExpression, FormatString, ...)

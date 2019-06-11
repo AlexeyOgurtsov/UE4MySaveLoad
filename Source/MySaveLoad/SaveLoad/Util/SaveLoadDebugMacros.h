@@ -29,6 +29,12 @@ DECLARE_LOG_CATEGORY_EXTERN(MySaveLoadLog, Log, All);
 #define SL_LOG_FATAL_ERROR_TO_IF(ShouldLog, FormatString, ...) M_LOG_FATAL_ERROR_TO_IF(ShouldLog, LogCategory, FormatString, ##__VA_ARGS__);
 #define SL_LOG_FATAL_ERROR_TO_IF_FLAGS(LogFlags, FormatString, ...) M_LOG_FATAL_ERROR_TO_IF_FLAGS(LogFlags, LogCategory, FormatString, ##__VA_ARGS__);
 
+#define SL_RETURN_VERIFY(ReturnValue, CheckExpression) M_RETURN_VERIFY(ReturnValue, CheckExpression);
+#define SL_RETURN_VERIFY_MSG(ReturnValue, CheckExpression, FormatString, ...) M_RETURN_VERIFY_MSG(ReturnValue, CheckExpression, FormatString, ###__VA_ARGS__);
+
+#define SL_RETURN_CHECK(ReturnValue, CheckExpression) M_RETURN_CHECK(ReturnValue, CheckExpression);
+#define SL_RETURN_CHECK_MSG(ReturnValue, CheckExpression, FormatString, ...) M_RETURN_CHECK_MSG(ReturnValue, CheckExpression, FormatString, ###__VA_ARGS__);
+
 #define SL_EMPTY_TO(LogCategory) M_EMPTY_TO(LogCategory);
 #define SL_EMPTY_MSG_TO(LogCategory, FormatString, ...) M_EMPTY_MSG_TO(LogCategory, FormatString, ##__VA_ARGS__);
 

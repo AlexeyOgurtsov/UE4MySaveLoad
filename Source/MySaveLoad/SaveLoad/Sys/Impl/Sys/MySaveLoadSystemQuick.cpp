@@ -72,8 +72,7 @@ TScriptInterface<IMySaveableHandle> UMySaveLoadSystemQuick::CreateSaveableHandle
 
 	UMySaveableHandleObject* const SaveableHandle = UMySaveableHandleObject::CreateSaveableHandleDefaultSubobject(InSaveable, this);
 	RegisterSaveableObject(SaveableHandle);
-	checkf(SaveableHandle, TEXT("Returned SaveableHandle must always be valid"));
-	return SaveableHandle;
+	SL_RETURN_CHECK_MSG(SaveableHandle, SaveableHandle, TEXT("Returned saveable handle must be valid NON-null pointer"));
 }
 
 void UMySaveLoadSystemQuick::NotifySaveableDestructed_Implementation(const TScriptInterface<IMySaveableHandle>& InSaveableHandle)
