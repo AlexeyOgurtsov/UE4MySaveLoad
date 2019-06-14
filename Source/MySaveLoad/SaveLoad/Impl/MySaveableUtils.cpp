@@ -27,6 +27,9 @@ void UMySaveableUtils::SerializeObjectData(FArchive& Ar, UObject* const InObj)
 
 bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> const InSaveable, ELogFlags InLogFlags)
 {
+	SL_LOGFUNC_IF_FLAGS(InLogFlags);
+	checkNoRecursion();
+
 	if(false == InSaveable->SaveLoad_GetUniqueFName().IsNone())
 	{
 		SL_LOG_ERROR_IF_FLAGS(InLogFlags, TEXT("%s: UniqueName must always be set for saveable object"), *InSaveable->SaveLoad_ToString());
@@ -48,6 +51,9 @@ bool UMySaveableUtils::IsSaveableValid(TScriptInterface<IMySaveable> const InSav
 
 bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> const InSaveable, ELogFlags InLogFlags)
 {
+	SL_LOGFUNC_IF_FLAGS(InLogFlags);
+	checkNoRecursion();
+
 	// When SaveLoad is disabled, any combination of flags is valid
 	if( false == InSaveable->SaveLoad_IsEnabled() )
 	{

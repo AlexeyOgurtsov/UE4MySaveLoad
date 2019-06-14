@@ -73,8 +73,19 @@ DECLARE_LOG_CATEGORY_EXTERN(MySaveLoadLog, Log, All);
 #define SL_EMPTY_MSG(FormatString, ...) SL_EMPTY_MSG_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
 
 // ~Scoped helpres Begin (@warning: NEVER include implementation in brackets, because it will limit the scope)
-#define SL_LOGFUNC() M_LOGFUNC_TO(MySaveloadLog);
+#define SL_LOGFUNC() M_LOGFUNC_TO(MySaveLoadLog);
 #define SL_LOGFUNC_MSG(FormatString, ...) M_LOGFUNC_MSG_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_LOGBLOCK(FormatString, ...) M_LOGBLOCK_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
+
+#define SL_LOGFUNC_STRING_IF(ShouldLog, InString) M_LOGFUNC_STRING_IF_TO(ShouldLog, MySaveLoadLog, InString);
+#define SL_LOGFUNC_IF(ShouldLog, LogCategory, FormatString, ...) M_LOGFUNC_STRING_IF_TO(ShouldLog, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_LOGFUNC_MSG_IF(ShouldLog, FormatString, ...) M_LOGFUNC_MSG_IF_TO(ShouldLog, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_LOGBLOCK_IF(ShouldLog, FormatString, ...) M_LOGBLOCK_IF_TO(ShouldLog, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+
+#define SL_LOGFUNC_STRING_IF_FLAGS(LogFlags, InString) M_LOGFUNC_STRING_IF_FLAGS_TO(LogFlags, MySaveLoadLog, InString);
+#define SL_LOGFUNC_IF_FLAGS(LogFlags) M_LOGFUNC_IF_FLAGS_TO(LogFlags, MySaveLoadLog);
+#define SL_LOGFUNC_MSG_IF_FLAGS(LogFlags, FormatString, ...) SL_LOGFUNC_MSG_IF_FLAGS_TO(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_LOGBLOCK_IF_FLAGS(LogFlags, FormatString, ...) M_LOGBLOCK_IF_FLAGS_TO(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 // ~Scoped helpres End
 
 #define SL_LOGBLOCK(FormatString, ...) M_LOGBLOCK_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
