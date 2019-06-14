@@ -3,6 +3,8 @@
 /**
 * Public interface of the save system (for calls from IMySaveable, for example).
 */
+
+#include "UObject/Interface.h"
 #include "IMySaveLoadSystem.generated.h"
 
 class IMySaveable;

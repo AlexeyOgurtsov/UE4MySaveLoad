@@ -5,6 +5,7 @@
 */
 
 #include "../Format/MySaveTypes.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "MySaveLoadSystemUtils.generated.h"
 
 class IMySaveableHandle;

@@ -4,6 +4,8 @@
 * Utils to be used within the IMySaveable implementation.
 */
 
+#include "Util/Core/Log/MyLoggingTypes.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "MySaveableUtils.generated.h"
 
 class IMySaveable;
@@ -26,11 +28,17 @@ public:
 	// ~Implementation helpers End
 
 	// ~Validation Begin
+	static bool IsSaveableValid(TScriptInterface<IMySaveable> InSaveable, ELogFlags InLogFlags = ELogFlags::None);
+
 	/**
 	* Returns true if all flags are set as valid.
 	*/
-	static bool IsSaveableValid(TScriptInterface<IMySaveable> InObj, bool bInLogged = true);
-	static bool AreSaveableFlagsValid(TScriptInterface<IMySaveable> InObj, bool bInLogged = true);
+	static bool AreSaveableFlagsValid(TScriptInterface<IMySaveable> InSaveable, ELogFlags InLogFlags);
+	
+	/**
+	* Returns true if all saveable fields are correctly marked with flags recursively.
+	*/
+	static bool AreAllFieldsValidRecursive(TScriptInterface<IMySaveable> InSaveable, ELogFlags InLogFlags);
 	// ~Validation End
 };
 

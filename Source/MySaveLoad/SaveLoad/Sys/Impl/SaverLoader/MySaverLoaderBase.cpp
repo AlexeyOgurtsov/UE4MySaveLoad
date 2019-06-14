@@ -8,6 +8,7 @@
 
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
+#include "Templates/SubclassOf.h"
 #include "Engine/World.h"
 #include "Serialization/Archive.h"
 

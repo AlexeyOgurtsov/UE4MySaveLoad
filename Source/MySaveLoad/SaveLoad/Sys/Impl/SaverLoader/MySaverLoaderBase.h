@@ -5,8 +5,11 @@
 */
 
 #include "../Format/MySaveTypes.h"
-#include "Util/Core/Log/MyLoggingTypes.h"
 #include "../Sys/IMySaveLoadSystemInternal.h"
+#include "Util/Core/Log/MyLoggingTypes.h"
+
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "Templates/SubclassOf.h"
 #include "MySaverLoaderBase.generated.h"
 
 class UMySaveLoadState;

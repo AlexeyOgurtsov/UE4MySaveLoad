@@ -5,6 +5,7 @@
 */
 
 #include "SaveLoad/IMySaveLoadSystem.h"
+#include "UObject/Interface.h"
 #include "IMySaveLoadSystemInternal.generated.h"
 
 class IMySaveableHandle;

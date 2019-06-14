@@ -6,6 +6,7 @@
 
 #include "Util/Core/LogUtilLib.h"
 #include "SaveLoadDebugMacros.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "SaveLoadLogUtilLib.generated.h"
 
 UCLASS()

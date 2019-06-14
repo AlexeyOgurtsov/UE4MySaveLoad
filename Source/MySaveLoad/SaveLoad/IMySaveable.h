@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MySaveableTypes.h"
+#include "UObject/Interface.h"
 #include "IMySaveable.generated.h"
 
 class IMySaveableHandle;
