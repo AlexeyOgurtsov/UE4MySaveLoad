@@ -43,7 +43,7 @@ void UMyLoaderBase::Load()
 		// @TODO: Loading objects
 	}
 
-	SL_NOT_IMPL(TEXT("Function is not complete yet"));
+	SL_NOT_IMPL();
 }
 
 void UMyLoaderBase::CheckAndLoadBinaryFromArchive()
@@ -119,7 +119,7 @@ void UMyLoaderBase::DestroyExtraObjects()
 		GetState()->StaticDestructedObjects.Add(FName(*SavedObjectToDestruct.UniqueName));
 
 		// @TODO: Find object by name
-		SL_NOT_IMPL(TEXT("Find object by name")); TScriptInterface<IMySaveable> Obj = nullptr;
+		SL_NOT_IMPL_MSG(TEXT("Find object by name")); TScriptInterface<IMySaveable> Obj = nullptr;
 
 		if(Obj)
 		{
@@ -131,7 +131,7 @@ void UMyLoaderBase::DestroyExtraObjects()
 			Obj->SaveLoad_BeforeDestroy();
 
 			{
-				SL_NOT_IMPL(TEXT("Destruction"));
+				SL_NOT_IMPL_MSG(TEXT("Destruction"));
 				// @TODO: Is it right? Maybe we have some links to object still (in the renderer maybe)?
 			}
 		}
@@ -140,6 +140,6 @@ void UMyLoaderBase::DestroyExtraObjects()
 
 TScriptInterface<IMySaveableHandle> UMyLoaderBase::LoadSavedObject(const FMySavedObject* const pSavedObject)
 {
-	SL_NOT_IMPL_RET(TScriptInterface<IMySaveableHandle>(), TEXT("Write it"));
+	SL_NOT_IMPL_RET(TScriptInterface<IMySaveableHandle>());
 }
       

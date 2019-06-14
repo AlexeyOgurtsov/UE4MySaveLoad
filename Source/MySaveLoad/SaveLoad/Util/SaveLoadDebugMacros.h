@@ -38,8 +38,8 @@ DECLARE_LOG_CATEGORY_EXTERN(MySaveLoadLog, Log, All);
 #define SL_EMPTY_TO(LogCategory) M_EMPTY_TO(LogCategory);
 #define SL_EMPTY_MSG_TO(LogCategory, FormatString, ...) M_EMPTY_MSG_TO(LogCategory, FormatString, ##__VA_ARGS__);
 
-#define SL_NOT_IMPL_TO(LogCategory, FormatString, ...) M_NOT_IMPL_TO(LogCategory, FormatString, ##__VA_ARGS__);
-#define SL_NOT_IMPL_RET_TO(ReturnValue, LogCategory, FormatString, ...) M_NOT_IMPL_RET_TO(ReturnValue, LogCategory, FormatString, ##__VA_ARGS__);
+#define SL_NOT_IMPL_MSG_TO(LogCategory, FormatString, ...) M_NOT_IMPL_MSG_TO(LogCategory, FormatString, ##__VA_ARGS__);
+#define SL_NOT_IMPL_MSG_RET_TO(ReturnValue, LogCategory, FormatString, ...) M_NOT_IMPL_MSG_RET_TO(ReturnValue, LogCategory, FormatString, ##__VA_ARGS__);
 
 #define SL_TO_BE_IMPL_TO(LogCategory, FormatString, ...) M_TO_BE_IMPL_TO(LogCategory, FormatString, ##__VA_ARGS__);
 #define SL_TO_BE_IMPL_RET_TO(ReturnValue, LogCategory, FormatString, ...) M_TO_BE_IMPL_RET_TO(ReturnValue, LogCategory, FormatString, ##__VA_ARGS__);
@@ -62,10 +62,14 @@ DECLARE_LOG_CATEGORY_EXTERN(MySaveLoadLog, Log, All);
 #define SL_LOG_FATAL_ERROR_IF(ShouldLog, FormatString, ...) SL_LOG_FATAL_ERROR_TO_IF(ShouldLog, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 #define SL_LOG_FATAL_ERROR_IF_FLAGS(LogFlags, FormatString, ...) SL_LOG_FATAL_ERROR_TO_IF_FLAGS(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 
-#define SL_NOT_IMPL(FormatString, ...) SL_NOT_IMPL_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_NOT_IMPL_MSG(FormatString, ...) M_NOT_IMPL_MSG_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_NOT_IMPL() M_NOT_IMPL();
+#define SL_NOT_IMPL_RET(ReturnValue) M_NOT_IMPL_RET(ReturnValue);
+
 #define SL_TO_BE_IMPL(FormatString, ...) SL_TO_BE_IMPL_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
 #define SL_IMPL_NOTE(FormatString, ...) SL_IMPL_NOTE_TO(MySaveLoadLog, FormatString, ##__VA_ARGS__);
-#define SL_NOT_IMPL_RET(ReturnValue, FormatString, ...) SL_NOT_IMPL_RET_TO(ReturnValue, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_NOT_IMPL_MSG_RET(ReturnValue, FormatString, ...) SL_NOT_IMPL_MSG_RET_TO(ReturnValue, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+
 #define SL_TO_BE_IMPL_RET(ReturnValue, FormatString, ...) SL_TO_BE_IMPL_RET_TO(ReturnValue, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 
 
