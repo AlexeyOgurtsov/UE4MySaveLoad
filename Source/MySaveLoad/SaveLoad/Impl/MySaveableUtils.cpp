@@ -71,35 +71,64 @@ bool UMySaveableUtils::AreSaveableFlagsValid(TScriptInterface<IMySaveable> const
 	return true;
 }
 
+namespace
+{
+	bool AreAllObjectFieldsValidRecursive(const UObject* InObject, ELogFlags InLogFlags, TSet<const UObject*>& VisitedObjects)
+	{
+		SL_LOGFUNC_MSG_IF_FLAGS(InLogFlags, TEXT("Object {%s}: Checking saveable object/subobject property validity"), *ULogUtilLib::GetNameAndClassSafe(InObject));
+		for(const TPair<const UProperty*, const void*>& PropValuePair : TPropertyValueRange<const UProperty>(InObject->GetClass(), InObject, EPropertyValueIteratorFlags::FullRecursion))
+		{
+			const UProperty* Prop = PropValuePair.Key;
+			const void* PropValue = PropValuePair.Value;
+			FString PropertyPrefix = FString::Printf(TEXT("property {%s}: "), *UPropertyLogLib::GetPropertyValueString(Prop, PropValue));
+
+			if( Prop->HasAllPropertyFlags(CPF_SaveGame) )
+			{
+				M_LOG_IF_FLAGS(InLogFlags, TEXT("%sSaveGame flag set"), *PropertyPrefix);
+
+				if(const UObject* PropValueAsObject = UPropertyLib::GetPropertyValueAsObject(Prop, PropValue))
+				{
+					M_LOG_IF_FLAGS(InLogFlags, TEXT("%sProperty value is valid UObject"), *PropertyPrefix);
+					if(PropValueAsObject->GetClass()->ImplementsInterface(UMySaveable::StaticClass()))
+					{
+						SL_LOG_ERROR_IF_FLAGS(InLogFlags, TEXT("%sSubobject of %s-implementing object not allowed to implement the saveable interface itself when its property is marked with the SaveLoad flag."), *PropertyPrefix, *UMySaveable::StaticClass()->GetName());
+						return false;
+					}
+					else
+					{
+						if(const UInterfaceProperty* PropAsInterface = Cast<const UInterfaceProperty>(Prop))
+						{
+							if( ! VisitedObjects.Contains(PropValueAsObject) )
+							{
+								M_LOG_IF_FLAGS(InLogFlags, TEXT("%sRecursive check for interface property"), *PropertyPrefix);
+								// Interface property value objects are not iterated automatically by the property value iterator,
+								// so, we do it ourselves
+								if( ! AreAllObjectFieldsValidRecursive(PropValueAsObject, InLogFlags, VisitedObjects) )
+								{
+									return false;
+								}
+							}
+						}
+					}
+					
+					VisitedObjects.Add(PropValueAsObject);
+				}
+
+			}
+		}
+		return true;
+	}
+} // anonymous
+
 bool UMySaveableUtils::AreAllFieldsValidRecursive(TScriptInterface<IMySaveable> InSaveable, ELogFlags InLogFlags)
 {
+	checkNoRecursion();
+
 	if( ! InSaveable )
 	{
 		return true;
 	}
 
-	for(const TPair<const UProperty*, const void*>& PropValuePair : TPropertyValueRange<const UProperty>(InSaveable.GetObject()->GetClass(), InSaveable.GetObject(), EPropertyValueIteratorFlags::FullRecursion))
-	{
-		const UProperty* Prop = PropValuePair.Key;
-		const void* PropValue = PropValuePair.Value;
-		FString PropertyPrefix = FString::Printf(TEXT("property {%s}: "), *UPropertyLogLib::GetPropertyValueString(Prop, PropValue));
-
-		if( Prop->HasAllPropertyFlags(CPF_SaveGame) )
-		{
-			M_LOG_IF_FLAGS(InLogFlags, TEXT("%sSaveGame flag set"), *PropertyPrefix);
-
-			const UObject* PropValueAsObject = UPropertyLib::GetPropertyValueAsObject(Prop, PropValue);
-			if(PropValueAsObject)
-			{
-				M_LOG_IF_FLAGS(InLogFlags, TEXT("%sProperty value is valid UObject"), *PropertyPrefix);
-				if(PropValueAsObject->GetClass()->ImplementsInterface(UMySaveable::StaticClass()))
-				{
-					SL_LOG_ERROR_IF_FLAGS(InLogFlags, TEXT("%sSubobject of %s-implementing object not allowed to implement the saveable interface itself when its property is marked with the SaveLoad flag."), *PropertyPrefix, *UMySaveable::StaticClass()->GetName());
-					return false;
-				}
-			}
-		}
-	}
-
-	return true;
+	TSet<const UObject*> VisitedObjects;
+	return AreAllObjectFieldsValidRecursive(InSaveable.GetObject(), InLogFlags, VisitedObjects);
 }

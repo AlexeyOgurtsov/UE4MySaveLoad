@@ -88,7 +88,7 @@ DECLARE_LOG_CATEGORY_EXTERN(MySaveLoadLog, Log, All);
 
 #define SL_LOGFUNC_STRING_IF_FLAGS(LogFlags, InString) M_LOGFUNC_STRING_IF_FLAGS_TO(LogFlags, MySaveLoadLog, InString);
 #define SL_LOGFUNC_IF_FLAGS(LogFlags) M_LOGFUNC_IF_FLAGS_TO(LogFlags, MySaveLoadLog);
-#define SL_LOGFUNC_MSG_IF_FLAGS(LogFlags, FormatString, ...) SL_LOGFUNC_MSG_IF_FLAGS_TO(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
+#define SL_LOGFUNC_MSG_IF_FLAGS(LogFlags, FormatString, ...) M_LOGFUNC_MSG_IF_FLAGS_TO(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 #define SL_LOGBLOCK_IF_FLAGS(LogFlags, FormatString, ...) M_LOGBLOCK_IF_FLAGS_TO(LogFlags, MySaveLoadLog, FormatString, ##__VA_ARGS__);
 // ~Scoped helpres End
 
