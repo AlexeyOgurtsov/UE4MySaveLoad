@@ -94,7 +94,7 @@ bool UMySaveableUtils::AreAllFieldsValidRecursive(TScriptInterface<IMySaveable> 
 				M_LOG_IF_FLAGS(InLogFlags, TEXT("%sProperty value is valid UObject"), *PropertyPrefix);
 				if(PropValueAsObject->GetClass()->ImplementsInterface(UMySaveable::StaticClass()))
 				{
-					SL_LOG_ERROR_IF_FLAGS(InLogFlags, TEXT("%sSubobject of %s-implementing object not allowed to implement the saveable interface itself when its property is marked with the SaveLoad flag."), *PropertyPrefix, *UMySaveable::StaticClass()->GetName());
+					SL_ERROR_IF_FLAGS(InLogFlags, TEXT("%sSubobject of %s-implementing object not allowed to implement the saveable interface itself when its property is marked with the SaveLoad flag."), *PropertyPrefix, *UMySaveable::StaticClass()->GetName());
 					return false;
 				}
 			}
