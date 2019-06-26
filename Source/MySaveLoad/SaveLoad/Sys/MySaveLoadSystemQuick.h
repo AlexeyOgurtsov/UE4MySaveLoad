@@ -9,6 +9,15 @@
 
 class IMySaveableHandle;
 
+/**
+* Contains all parameters to be passed during creation of the save load system.
+*/
+USTRUCT(BlueprintType)
+struct FQuickSaveLoadSystemInitializer
+{
+	GENERATED_BODY()
+};
+
 UCLASS()
 class UMySaveLoadSystemQuick : 
 	public UObject, 
@@ -17,6 +26,14 @@ class UMySaveLoadSystemQuick :
 	GENERATED_BODY()
 
 public:
+	// ~Creation Begin
+	UFUNCTION(BlueprintCallable, Category = QuickSaveLoadSystem)
+	static UMySaveLoadSystemQuick* NewQuickSaveLoadSystem(UObject* InOuter, const FQuickSaveLoadSystemInitializer& InInitializer);
+
+	UFUNCTION(BlueprintCallable, Category = QuickSaveLoadSystem)
+	static UMySaveLoadSystemQuick* CreateDefaultQuickSaveLoadSystem(UObject* InOuter, const FQuickSaveLoadSystemInitializer& InInitializer);
+	// ~Creation End
+
 	// ~IMySaveLoadSystem Begin
 	virtual void Load(FArchive& Ar) override;
 	virtual void Save(FArchive& Ar) override;
@@ -32,6 +49,13 @@ public:
 	// ~IMySaveLoadSystemInternal End
 
 private:
+	// ~Initialization Begin
+	/**
+	* Initializes the quick Save Load system.
+	*/
+	void InitializeQuickSaveLoad(UObject* InOuter, const FQuickSaveLoadSystemInitializer& InInitializer);
+	// ~Initialization End
+
 	void RegisterSaveableObject(TScriptInterface<IMySaveableHandle> InSaveable);
 	void UnregisterSaveableObjectChecked(TScriptInterface<IMySaveableHandle> InSaveable);
 
