@@ -18,6 +18,9 @@ class UMySaveLoadSystemQuick :
 
 public:
 	// ~IMySaveLoadSystem Begin
+	virtual void Load(FArchive& Ar) override;
+	virtual void Save(FArchive& Ar) override;
+
 	virtual TScriptInterface<IMySaveableHandle> CreateSaveableHandle_Implementation(const TScriptInterface<IMySaveable>& InSaveable) override;
 	virtual void NotifySaveableDestructed_Implementation(const TScriptInterface<IMySaveableHandle>& InSaveableHandle) override;
 	// ~IMySaveLoadSystem End

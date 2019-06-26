@@ -2,9 +2,23 @@
 #include "SaveLoad/IMySaveable.h"
 #include "../../MySaveableHandleObject.h"
 
+// @TODO: Include saver and loader here
+//#include "Sys/Impl/SaverLoader/MyLoaderBase.h"
+//#include "Sys/Impl/SaverLoader/MySaverBase.h"
+
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Engine/World.h"
+
+void UMySaveLoadSystemQuick::Load(FArchive& Ar)
+{
+	SL_NOT_IMPL();
+}
+
+void UMySaveLoadSystemQuick::Save(FArchive& Ar)
+{
+	SL_NOT_IMPL();
+}
 
 namespace 
 {

@@ -26,12 +26,14 @@ public:
 	/**
 	* Loads world from the archive.
 	*/
-	virtual void Load(FArchive& Ar) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
+	void Load(FArchive& Ar);
 
 	/**
 	* Saves world to the archive.
 	*/
-	virtual void Save(FArchive& Ar) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
+	void Save(FArchive& Ar);
 	// ~Save load End
 
 	// ~Saveable object Begin

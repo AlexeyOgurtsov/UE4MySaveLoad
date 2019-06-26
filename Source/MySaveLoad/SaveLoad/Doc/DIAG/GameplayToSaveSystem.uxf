@@ -19,12 +19,14 @@ bg=blue</panel_attributes>
       <x>640</x>
       <y>112</y>
       <w>240</w>
-      <h>80</h>
+      <h>112</h>
     </coordinates>
     <panel_attributes>IMySaveLoadSystem
 --
 /+ CreateSaveableHandle(InSaveable)/
-/+ NotifyObjectDestructed(InSaveableHandle)/</panel_attributes>
+/+ NotifyObjectDestructed(InSaveableHandle)/
+/+ Load(FArchive&amp;)/
+/+ Save(FArchive&amp;)/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
