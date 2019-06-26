@@ -4,6 +4,10 @@ Goal: Improve the system's interface to make it testable and write primary tests
 
 ******** Testing:
 
+******** Testing Base:
+1. Save load test base class
+1.1. Create save load system. 
+
 ******** Design:
 ** Saver Loader classes: 
 * They abstract? Separate functionality into another class.
