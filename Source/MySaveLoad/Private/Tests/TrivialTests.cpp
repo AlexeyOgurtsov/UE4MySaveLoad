@@ -1,5 +1,5 @@
 #include "SaveLoadTestBase.h"
-#include "Util/SaveLoadLogUtilLib.h"
+#include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #define SAVELOAD_TRIVIAL_TEST_PREFIX "SaveLoad.Trivial."
 

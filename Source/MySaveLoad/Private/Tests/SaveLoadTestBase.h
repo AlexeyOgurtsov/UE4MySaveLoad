@@ -1,16 +1,17 @@
 #pragma once
 
 #include "Misc/AutomationTest.h"
+#include "SaveLoad/Sys/MySaveLoadSystemQuick.h"
 #include "Templates/UniquePtr.h"
 
 class IMySaveLoadSystem;
 
-class FSaveLoadTestBase : public FAutomationTest
+class FSaveLoadTestBase : public FAutomationTestBase
 {
 public:
 	FSaveLoadTestBase(const FString& InName, bool const bInComplexTask);
 
-	IMySaveLoadSystem* GetSys() const { return Sys; }
+	IMySaveLoadSystem* GetSys() const { return Sys.Get(); }
 
 protected:
 	/**
