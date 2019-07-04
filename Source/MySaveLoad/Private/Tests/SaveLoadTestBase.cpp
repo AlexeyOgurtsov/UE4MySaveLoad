@@ -45,12 +45,35 @@ bool FSaveLoadTestBase::RunTest(const FString& Parameters)
 		return false;
 	}
 
+	// @note: typically prepared world actors are save load system actors,
+	// so the save load system must be already up-and-running
+	if( ! PrepareWorldLogged (World, Sys, Parameters) )
+	{
+		return false;
+	}
+
 	bool bSucceeded;
 	{
 		SL_LOGBLOCK(TEXT("*** TEST \"%s\": REAL TEST CODE ***"), *GetTestName());
 		bSucceeded = MyRunTest(Parameters);
 	}
 	return bSucceeded;
+}
+
+bool FSaveLoadTestBase::PrepareWorldLogged(UWorld* const InWorld, IMySaveLoadSystem* const InSys, const FString& InParameters)
+{
+	SL_LOGFUNC_MSG(TEXT("*** PREPARE WORLD for test \"%s\""), *GetTestName());
+
+	checkf(InWorld, TEXT("Before calling %s UWorld always must be initialized"), TEXT(__FUNCTION__));
+	checkf(InSys, TEXT("Before calling %s Save load system always must be initialized because SaveLoad objects're often spawned into the world"), TEXT(__FUNCTION__));
+
+	if( ! PrepareWorld(InWorld, InSys, InParameters) )
+	{
+		M_LOG_ERROR(TEXT("Prepare world failed"));
+		return false;
+	}
+
+	return true;
 }
 
 bool FSaveLoadTestBase::InitializeSaveLoadSystem()

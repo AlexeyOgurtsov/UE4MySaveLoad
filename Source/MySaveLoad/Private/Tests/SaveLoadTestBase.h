@@ -29,10 +29,17 @@ protected:
 	/**
 	* My version of RunTest.
 	* @warn: Override this version, and NOT RunTest itself!
-	* @warn: Super must NOT be called when overriding.
+	* @warn: Super should NOT be called when overriding.
 	*/
 	virtual bool MyRunTest(const FString& Parameters) = 0;
 
+
+	/**
+	* Prepares the given world (create actors etc.)
+	*
+	* @note: super should NOT be called when overriding.
+	*/
+	virtual bool PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* InSys, const FString& Parameters) = 0;
 
 private:
 	// ~SaveLoad System Begin
@@ -54,6 +61,7 @@ private:
 	* @returns: true if successfully initialized.
 	*/
 	bool InitializeWorld();
+	bool PrepareWorldLogged(UWorld* InWorld, IMySaveLoadSystem* InSys, const FString& InParameters);
 	
 	UWorld* World = nullptr;
 	// ~World End
@@ -77,6 +85,7 @@ private:
 	}\
 	protected:\
 		virtual bool MyRunTest(const FString& Parameters) override;\
+		virtual bool PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* InSys, const FString& Parameters) override;\
 	};
 
 #define IMPLEMENT_CUSTOM_SAVELOAD_TEST(TClass, TBaseClass, PrettyName, TFlags)\
