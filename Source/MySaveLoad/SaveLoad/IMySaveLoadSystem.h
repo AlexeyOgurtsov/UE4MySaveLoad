@@ -22,6 +22,13 @@ class IMySaveLoadSystem
 	GENERATED_BODY()
 
 public:
+	// ~State Begin
+	/**
+	* The world we currently operate upon
+	*/
+	virtual UWorld* GetTiedWorld() const = 0;
+	// ~State End
+
 	// ~Save load Begin
 	/**
 	* Loads world from the archive.

@@ -44,7 +44,7 @@ void UMySaveableHandleObject::BeginDestroy()
 
 void UMySaveableHandleObject::InitPrefixString()
 {
-	PrefixString = Saveable->SaveLoad_GetPrefixString(FString(TEXT("UMySaveableHandleObject")));
+	PrefixString = Saveable ? Saveable->SaveLoad_GetPrefixString(FString(TEXT("UMySaveableHandleObject"))) : FString(TEXT("Saveable is nullptr"));
 }
 
 IMySaveLoadSystem* UMySaveableHandleObject::GetSys() const

@@ -51,6 +51,8 @@ public:
 	// ~Creation End
 
 	// ~IMySaveLoadSystem Begin
+	virtual UWorld* GetTiedWorld() const override { return World; }
+
 	virtual void Load(FArchive& Ar) override;
 	virtual void Save(FArchive& Ar) override;
 

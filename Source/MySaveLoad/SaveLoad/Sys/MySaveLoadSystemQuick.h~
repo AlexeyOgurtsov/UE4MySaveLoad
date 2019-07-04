@@ -25,6 +25,7 @@ struct FQuickSaveLoadSystemInitializer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = World)
 	UWorld* World = nullptr;
 
+	FQuickSaveLoadSystemInitializer() {}
 	FQuickSaveLoadSystemInitializer(UWorld* InWorld)
 	:	World(InWorld)
 	{
@@ -50,6 +51,8 @@ public:
 	// ~Creation End
 
 	// ~IMySaveLoadSystem Begin
+	virtual UWorld* GetTiedWorld() const override { return World; }
+
 	virtual void Load(FArchive& Ar) override;
 	virtual void Save(FArchive& Ar) override;
 
