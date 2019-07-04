@@ -25,7 +25,7 @@ bool FSaveLoadTestBase::RunTest(const FString& Parameters)
 	bool bSucceeded;
 	{
 		SL_LOGBLOCK(TEXT("*** TEST \"%s\": REAL TEST CODE ***"), *GetTestName());
-		bSucceeded = MyRunTest(Parameters);
+		bSucceeded = MyRunTest();
 	}
 	return bSucceeded;
 }

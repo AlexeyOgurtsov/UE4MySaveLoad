@@ -55,7 +55,7 @@ private:
 */
 #define IMPLEMENT_SAVELOAD_TEST_PRIVATE(TClass, TBaseClass, PrettyName, TFlags, TFile, TLine)\
 	IMPLEMENT_SIMPLE_AUTOMATION_TEST_PRIVATE(FAutogenSLTestBase##TClass, TBaseClass, PrettyName, TFlags, TFile, TLine);\
-	bool FAutogenSLTestBase##TClass::RunTest(const FString& Parameters)\
+	bool FAutogenSLTestBase##TClass::RunTest(const FString& Parameters) override\
 	{\
 		return TBaseClass::RunTest(Parameters);\
 	}\
