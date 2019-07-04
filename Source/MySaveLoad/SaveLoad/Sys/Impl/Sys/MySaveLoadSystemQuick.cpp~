@@ -27,7 +27,8 @@ UMySaveLoadSystemQuick* UMySaveLoadSystemQuick::CreateDefaultQuickSaveLoadSystem
 
 void UMySaveLoadSystemQuick::InitializeQuickSaveLoad(UObject* InOuter, const FQuickSaveLoadSystemInitializer& InInitializer)
 {
-	SL_EMPTY();
+	// @note: no validation required here - it must be performed inside the initializer struct
+	World = InInitializer.World;
 }
 
 void UMySaveLoadSystemQuick::Load(FArchive& Ar)

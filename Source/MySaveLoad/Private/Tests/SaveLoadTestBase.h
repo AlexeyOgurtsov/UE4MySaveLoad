@@ -4,10 +4,6 @@
 
 class IMySaveLoadSystem;
 
-/**
-* TODO Save load system:
-*/
-
 class FSaveLoadTestBase : public FAutomationTestBase
 {
 public:
@@ -16,6 +12,8 @@ public:
 
 	IMySaveLoadSystem* GetSys() const { return Sys; }
 	UObject* GetSysObj() const;
+
+	UWorld* GetWorld() const { return World; }
 
 	// ~FAutomationTestBase Begin
 	/**
@@ -43,11 +41,22 @@ private:
 	*
 	* @warn: Automatically called by the SaveLoadTestBase framework,
 	* should not be called manually.
+	* @returns: true if successfully initialized.
 	*/
-	void InitializeSaveLoadSystem();
+	bool InitializeSaveLoadSystem();
 
 	IMySaveLoadSystem* Sys = nullptr;
 	// ~SaveLoad System End
+	
+	// ~World Begin
+	/**
+	* Creates UWorld and initializes it.
+	* @returns: true if successfully initialized.
+	*/
+	bool InitializeWorld();
+	
+	UWorld* World = nullptr;
+	// ~World End
 };
 
 /**

@@ -25,7 +25,6 @@ struct FQuickSaveLoadSystemInitializer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = World)
 	UWorld* World = nullptr;
 
-	FQuickSaveLoadSystemInitializer() {}
 	FQuickSaveLoadSystemInitializer(UWorld* InWorld)
 	:	World(InWorld)
 	{
