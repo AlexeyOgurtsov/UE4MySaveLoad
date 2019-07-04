@@ -4,7 +4,7 @@
 #define SAVELOAD_TRIVIAL_TEST_PREFIX "SaveLoad.Trivial."
 
 IMPLEMENT_SAVELOAD_TEST(FSaveLoad_Trivial_First, SAVELOAD_TRIVIAL_TEST_PREFIX "First", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter);
-IMPLEMENT_SAVELOAD_TEST(FSaveLoad_Trivial_Second, SAVELOAD_TRIVIAL_TEST_PREFIX "First", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter);
+IMPLEMENT_SAVELOAD_TEST(FSaveLoad_Trivial_Second, SAVELOAD_TRIVIAL_TEST_PREFIX "Second", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter);
 
 // ~First trivial test Begin
 bool FSaveLoad_Trivial_First::MyRunTest(const FString& Parameters)
