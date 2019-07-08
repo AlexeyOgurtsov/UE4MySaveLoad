@@ -2,7 +2,11 @@
 
 #include "Misc/AutomationTest.h"
 
+#include "Math/Rotator.h"
+
 class IMySaveLoadSystem;
+class ATUActor;
+class AActor;
 
 class FSaveLoadTestBase : public FAutomationTestBase
 {
@@ -24,6 +28,16 @@ public:
 	*/
 	virtual bool RunTest(const FString& Parameters) override;
 	// ~FAutomationTestBase End
+	
+	// ~Spawn helpers Begin
+	template<class ActorT>
+	ActorT* Spawn(const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0})
+	{
+		return Cast<ActorT>(Spawn(ActorT::StaticClass(), InLocation, InRotation));
+	}
+	AActor* Spawn(UClass* InClass, const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0});
+	ATUActor* SpawnTU(const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0});
+	// ~Spawn helpers End
 
 protected:
 	/**

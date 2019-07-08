@@ -3,6 +3,8 @@
 #include "SaveLoad/Sys/MySaveLoadSystemQuick.h"
 #include "Util/Core/WorldUtilLib.h"
 
+#include "Util/TestUtil/TUActor.h"
+
 #include "Engine/World.h"
 
 /**
@@ -24,11 +26,7 @@ FSaveLoadTestBase::~FSaveLoadTestBase()
 		SysObj->RemoveFromRoot();
 	}
 
-	if(World)
-	{
-		M_LOGBLOCK(TEXT("UWorld::DestroyWorld (on valid pointer)"));
-		World->DestroyWorld(/*bInformWorld*/true, /*NewWorld*/nullptr);
-	}
+	UWorldUtilLib::DestroyWorldSafe(&World);
 }
 
 bool FSaveLoadTestBase::RunTest(const FString& Parameters)
@@ -111,4 +109,14 @@ bool FSaveLoadTestBase::InitializeWorld()
 UObject* FSaveLoadTestBase::GetSysObj() const
 {
 	return Cast<UObject>(Sys);
+}
+
+AActor* FSaveLoadTestBase::Spawn(UClass* InClass, const FVector& InLocation, const FRotator& InRotation)
+{
+	return UWorldUtilLib::Spawn(World, InClass, InLocation, InRotation);
+}
+
+ATUActor* FSaveLoadTestBase::SpawnTU(const FVector& InLocation, const FRotator& InRotation)
+{
+	return Spawn<ATUActor>(InLocation, InRotation);
 }
