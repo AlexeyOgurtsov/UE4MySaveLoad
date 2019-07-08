@@ -3,6 +3,10 @@
 
 #include "Util/TestUtil/TUActor.h"
 
+/**
+* TODO: Save/Load test.
+*/
+
 #define SAVELOAD_TRIVIAL_TEST_PREFIX "SaveLoad.Trivial."
 
 IMPLEMENT_SAVELOAD_TEST(FSaveLoad_Trivial_First, SAVELOAD_TRIVIAL_TEST_PREFIX "First", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter);
@@ -11,6 +15,7 @@ IMPLEMENT_SAVELOAD_TEST(FSaveLoad_Trivial_Second, SAVELOAD_TRIVIAL_TEST_PREFIX "
 // ~First trivial test Begin
 bool FSaveLoad_Trivial_First::MyRunTest(const FString& Parameters)
 {
+	SaveLoad();
 	return true;
 };
 
@@ -18,6 +23,7 @@ bool FSaveLoad_Trivial_First::PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* I
 {
 	ATUActor* const A = SpawnTU(FVector{0,0,0});
 	ATUActor* const A2 = SpawnTU(FVector{1.0F, 0.0F, 0.0F});
+
 	return true;
 }
 // ~First trivial test End

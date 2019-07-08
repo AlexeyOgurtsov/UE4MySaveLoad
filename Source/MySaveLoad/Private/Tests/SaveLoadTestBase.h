@@ -19,6 +19,43 @@ public:
 
 	UWorld* GetWorld() const { return World; }
 
+	// ~SaveLoad Begin
+	/**
+	* Name of test slot name.
+	*/
+	static const FString SAVE_SLOT_NAME;
+
+	/**
+	* Index of test user
+	*/
+	static const int32 SAVE_USER_INDEX;
+
+	/**
+	* Version of SaveLoad that cannot fail.
+	*
+	* @see: SaveLoad
+	*/
+	void SaveLoadChecked();
+
+	/**
+	* Saves into test save file, then immediately loads from it.
+	* @returns: true if sucessfully saved and loaded.
+	*/
+	bool SaveLoad();
+
+	/**
+	* Saves into test save file.
+	* @returns: true if successfully saved.
+	*/
+	bool Save();
+
+	/**
+	* Loads from test save file.
+	* @returns: true if successfuly loaded.
+	*/
+	bool Load();
+	// ~SaveLoad End
+
 	// ~FAutomationTestBase Begin
 	/**
 	* Override of the Automation framework test function.

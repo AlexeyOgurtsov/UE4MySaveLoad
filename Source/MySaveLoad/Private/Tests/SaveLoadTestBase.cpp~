@@ -1,6 +1,7 @@
 #include "SaveLoadTestBase.h"
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 #include "SaveLoad/Sys/MySaveLoadSystemQuick.h"
+#include "SaveLoad/MySaveLoadLib.h"
 #include "Util/Core/WorldUtilLib.h"
 
 #include "Util/TestUtil/TUActor.h"
@@ -8,8 +9,16 @@
 #include "Engine/World.h"
 
 /**
-* TODO
+* TODO 
+*
+* TODO Spawn:
+* 1. Fix parameters: should take NAME
+*
+* TODO SaveLoad
 */
+
+const FString FSaveLoadTestBase::SAVE_SLOT_NAME { FString(TEXT("TEST_SLOT")) };
+const int32 FSaveLoadTestBase::SAVE_USER_INDEX = 0;
 
 FSaveLoadTestBase::FSaveLoadTestBase(const FString& InName, bool const bInComplexTask)
 :	FAutomationTestBase{InName, bInComplexTask}
@@ -55,6 +64,35 @@ bool FSaveLoadTestBase::RunTest(const FString& Parameters)
 		SL_LOGBLOCK(TEXT("*** TEST \"%s\": REAL TEST CODE ***"), *GetTestName());
 		bSucceeded = MyRunTest(Parameters);
 	}
+	return bSucceeded;
+}
+
+
+void FSaveLoadTestBase::SaveLoadChecked()
+{
+	bool const bSucceeded = SaveLoad();
+	TestTrue(TEXT("Checked save-load must succeed"), bSucceeded);
+}
+
+bool FSaveLoadTestBase::SaveLoad()
+{
+	M_LOGFUNC();
+	checkNoRecursion();
+	Save();
+	Load();
+}
+
+bool FSaveLoadTestBase::Save()
+{
+	M_LOGFUNC();
+	bool const bSucceeded = UMySaveLoadLib::Save(GetSysObj(), SAVE_SLOT_NAME, SAVE_USER_INDEX);
+	return bSucceeded;
+}
+
+bool FSaveLoadTestBase::Load()
+{
+	M_LOGFUNC();
+	bool const bSucceeded = UMySaveLoadLib::Load(GetSysObj(), SAVE_SLOT_NAME, SAVE_USER_INDEX);
 	return bSucceeded;
 }
 
@@ -118,5 +156,5 @@ AActor* FSaveLoadTestBase::Spawn(UClass* InClass, const FVector& InLocation, con
 
 ATUActor* FSaveLoadTestBase::SpawnTU(const FVector& InLocation, const FRotator& InRotation)
 {
-	return Spaw<ATUActor>(InLocation, InRotation);
+	return Spawn<ATUActor>(InLocation, InRotation);
 }
