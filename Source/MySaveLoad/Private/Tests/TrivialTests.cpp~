@@ -5,6 +5,7 @@
 
 /**
 * TODO: Save/Load test.
+* 1. Check actors loaded after save
 */
 
 #define SAVELOAD_TRIVIAL_TEST_PREFIX "SaveLoad.Trivial."

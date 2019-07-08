@@ -15,6 +15,7 @@
 * 1. Fix parameters: should take NAME
 *
 * TODO SaveLoad
+* 1. Before load test the world must be in the state that differs the state it was saved.
 */
 
 const FString FSaveLoadTestBase::SAVE_SLOT_NAME { FString(TEXT("TEST_SLOT")) };
@@ -68,6 +69,11 @@ bool FSaveLoadTestBase::RunTest(const FString& Parameters)
 }
 
 
+void FSaveLoadTestBase::BetweenSaveLoad(UWorld* InWorld)
+{
+	M_NOT_IMPL_MSG(TEXT("Here we typically should clear world or migrate old actors between worlds!"));
+}
+
 void FSaveLoadTestBase::SaveLoadChecked()
 {
 	bool const bSucceeded = SaveLoad();
@@ -82,6 +88,7 @@ bool FSaveLoadTestBase::SaveLoad()
 	{
 		return false;
 	}
+	BetweenSaveLoad(GetWorld());
 	if( ! Load() )
 	{
 		return false;

@@ -92,6 +92,12 @@ protected:
 	*/
 	virtual bool PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* InSys, const FString& Parameters) = 0;
 
+	/**
+	* Action to be performed on the world between Save and Load tests.
+	* @note: typically super should NOT be called.
+	*/
+	virtual void BetweenSaveLoad(UWorld* InWorld);
+
 private:
 	// ~SaveLoad System Begin
 	/**

@@ -23,12 +23,12 @@ public:
 	/**
 	* Name of test slot name.
 	*/
-	const FString SAVE_SLOT_NAME;
+	static const FString SAVE_SLOT_NAME;
 
 	/**
 	* Index of test user
 	*/
-	const int32 SAVE_USER_INDEX;
+	static const int32 SAVE_USER_INDEX;
 
 	/**
 	* Version of SaveLoad that cannot fail.
@@ -91,6 +91,11 @@ protected:
 	* @note: super should NOT be called when overriding.
 	*/
 	virtual bool PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* InSys, const FString& Parameters) = 0;
+
+	/**
+	* Action to be performed on the world between Save and Load tests.
+	*/
+	virtual void BetweenSaveLoad(UWorld* InWorld);
 
 private:
 	// ~SaveLoad System Begin
