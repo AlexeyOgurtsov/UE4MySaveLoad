@@ -31,14 +31,14 @@ void UMySaveLoadSystemQuick::InitializeQuickSaveLoad(UObject* InOuter, const FQu
 	World = InInitializer.World;
 }
 
-void UMySaveLoadSystemQuick::Load(FArchive& Ar)
+bool UMySaveLoadSystemQuick::Load(FArchive& Ar)
 {
-	SL_NOT_IMPL();
+	SL_NOT_IMPL_RET(false);
 }
 
-void UMySaveLoadSystemQuick::Save(FArchive& Ar)
+bool UMySaveLoadSystemQuick::Save(FArchive& Ar)
 {
-	SL_NOT_IMPL();
+	SL_NOT_IMPL_RET(false);
 }
 
 namespace 

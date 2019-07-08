@@ -33,12 +33,12 @@ public:
 	/**
 	* Loads world from the archive.
 	*/
-	virtual void Load(FArchive& Ar) = 0;
+	virtual bool Load(FArchive& Ar) = 0;
 
 	/**
 	* Saves world to the archive.
 	*/
-	virtual void Save(FArchive& Ar) = 0;
+	virtual bool Save(FArchive& Ar) = 0;
 	// ~Save load End
 
 	// ~Saveable object Begin

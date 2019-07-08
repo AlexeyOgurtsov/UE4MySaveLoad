@@ -22,18 +22,23 @@ class IMySaveLoadSystem
 	GENERATED_BODY()
 
 public:
+	// ~State Begin
+	/**
+	* The world we currently operate upon
+	*/
+	virtual UWorld* GetTiedWorld() const = 0;
+	// ~State End
+
 	// ~Save load Begin
 	/**
 	* Loads world from the archive.
 	*/
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
-	void Load(FArchive& Ar);
+	virtual void Load(FArchive& Ar) = 0;
 
 	/**
 	* Saves world to the archive.
 	*/
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = SaveLoadSystem)
-	void Save(FArchive& Ar);
+	virtual void Save(FArchive& Ar) = 0;
 	// ~Save load End
 
 	// ~Saveable object Begin
