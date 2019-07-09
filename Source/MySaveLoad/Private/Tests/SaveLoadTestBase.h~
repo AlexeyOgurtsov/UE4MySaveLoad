@@ -94,6 +94,7 @@ protected:
 
 	/**
 	* Action to be performed on the world between Save and Load tests.
+	* @note: typically super should NOT be called.
 	*/
 	virtual void BetweenSaveLoad(UWorld* InWorld);
 

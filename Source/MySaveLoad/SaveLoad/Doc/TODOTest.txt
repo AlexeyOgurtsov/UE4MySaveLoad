@@ -2,7 +2,17 @@ Goal: Improve the system's interface to make it testable and write primary tests
 
 *** Provide Load/Save interface calls in the main system interface.
 
-******** Testing:
+******** Testing stuff:
+1. ISaveable-derived instance
+
+
+******** Testing scenes
+
+******** First test scene
+1. Create ISaveable-derived class
+2. Check ISaveable-derived class is loaded correctly
+2.1. Use manual check
+
 
 ******** Testing Base:
 1. Save load test base class: see TODO in its file.
@@ -10,7 +20,3 @@ Goal: Improve the system's interface to make it testable and write primary tests
 ******** Design:
 ** Saver Loader classes: 
 * They abstract? Separate functionality into another class.
-
-* If we using FArchive to specify the destination, then this functions cannot be used in blueprint!
-* Should we provide UWorld when loading or should the Load/Save functions take the current world by itself?
-* Should we load the map within the Load/Save function or should we doing it outside?

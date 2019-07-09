@@ -4,6 +4,7 @@
 #include "SaveLoad/MySaveLoadLib.h"
 #include "Util/Core/WorldUtilLib.h"
 
+#include "TestSaveable.h"
 #include "Util/TestUtil/TUActor.h"
 
 #include "Engine/World.h"
@@ -173,4 +174,9 @@ AActor* FSaveLoadTestBase::Spawn(UClass* InClass, const FVector& InLocation, con
 ATUActor* FSaveLoadTestBase::SpawnTU(const FVector& InLocation, const FRotator& InRotation)
 {
 	return Spawn<ATUActor>(InLocation, InRotation);
+}
+
+ATestSaveable* FSaveLoadTestBase::SpawnSaveable(const FVector& InLocation, const FRotator& InRotation)
+{
+	return Spawn<ATestSaveable>(InLocation, InRotation);
 }

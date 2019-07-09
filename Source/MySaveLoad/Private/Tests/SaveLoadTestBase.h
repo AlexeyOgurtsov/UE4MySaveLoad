@@ -6,6 +6,7 @@
 
 class IMySaveLoadSystem;
 class ATUActor;
+class ATestSaveable;
 class AActor;
 
 class FSaveLoadTestBase : public FAutomationTestBase
@@ -74,6 +75,7 @@ public:
 	}
 	AActor* Spawn(UClass* InClass, const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0});
 	ATUActor* SpawnTU(const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0});
+	ATestSaveable* SpawnSaveable(const FVector& InLocation, const FRotator& InRotation = FRotator{0,0,0});
 	// ~Spawn helpers End
 
 protected:

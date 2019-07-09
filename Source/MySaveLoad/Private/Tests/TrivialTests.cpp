@@ -2,6 +2,7 @@
 #include "SaveLoad/Util/SaveLoadLogUtilLib.h"
 
 #include "Util/TestUtil/TUActor.h"
+#include "TestSaveable.h"
 
 /**
 * TODO: Save/Load test.
@@ -24,6 +25,9 @@ bool FSaveLoad_Trivial_First::PrepareWorld(UWorld* InWorld, IMySaveLoadSystem* I
 {
 	ATUActor* const A = SpawnTU(FVector{0,0,0});
 	ATUActor* const A2 = SpawnTU(FVector{1.0F, 0.0F, 0.0F});
+
+	ATestSaveable* const SavA = SpawnSaveable(FVector{0.0F, 1.0F, 0.0F});
+	ATestSaveable* const SavA2 = SpawnSaveable(FVector{1.0F, 1.0F, 1.0F});
 
 	return true;
 }
