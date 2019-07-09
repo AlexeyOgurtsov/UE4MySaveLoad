@@ -16,6 +16,7 @@
 *
 * TODO SaveLoad
 * 1. Before load test the world must be in the state that differs the state it was saved.
+* 2. Should we wait before load after save (to flip ticks)?
 */
 
 const FString FSaveLoadTestBase::SAVE_SLOT_NAME { FString(TEXT("TEST_SLOT")) };
@@ -71,7 +72,8 @@ bool FSaveLoadTestBase::RunTest(const FString& Parameters)
 
 void FSaveLoadTestBase::BetweenSaveLoad(UWorld* InWorld)
 {
-	M_NOT_IMPL_MSG(TEXT("Here we typically should clear world or migrate old actors between worlds!"));
+	ULogUtilLib::PurgeWorld(InWorld);
+	M_TO_BE_IMPL(TEXT("Should we wait after purge?"));
 }
 
 void FSaveLoadTestBase::SaveLoadChecked()
